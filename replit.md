@@ -14,6 +14,7 @@ iOS App Configuration:
 - Privacy Compliance: App Tracking Transparency (ATT) framework implemented
 - User Tracking Description: "This app would like to track your activity across other companies' apps and websites to provide personalized ads and improve your gaming experience."
 - Privacy Policy: Hosted at /privacy route, comprehensive GDPR/CCPA/COPPA compliance
+- App Icon: 1024x1024 Hunter Games pumpkin icon configured for App Store submission
 
 # System Architecture
 
