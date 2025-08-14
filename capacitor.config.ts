@@ -10,7 +10,8 @@ const config: CapacitorConfig = {
   },
   ios: {
     scheme: 'Pumpkin Farm 3D',
-    contentInset: 'automatic'
+    contentInset: 'automatic',
+    allowsLinkPreview: false
   },
   plugins: {
     CapacitorHttp: {

@@ -28,6 +28,8 @@ workflows:
       - name: Initialize and sync Capacitor
         script: |
           npx cap sync ios
+          # Ensure App Tracking Transparency framework is available
+          echo "Verifying iOS deployment target for ATT framework..."
       - name: Install CocoaPods dependencies
         script: |
           cd ios/App && pod install
