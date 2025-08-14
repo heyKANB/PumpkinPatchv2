@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.pumpkinfarm3d.app",
+      "bundleIdentifier": "com.huntergames.pumpkinpatch",
       "buildNumber": "21",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses camera for AR features (future feature)",

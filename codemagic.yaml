@@ -8,7 +8,7 @@ workflows:
     environment:
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.pumpkinfarm3d.app
+        bundle_identifier: com.huntergames.pumpkinpatch
       vars:
         APP_STORE_CONNECT_ISSUER_ID: $APP_STORE_CONNECT_ISSUER_ID
         APP_STORE_CONNECT_KEY_ID: $APP_STORE_CONNECT_KEY_ID

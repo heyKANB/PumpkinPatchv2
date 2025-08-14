@@ -1,8 +1,9 @@
 import { useTexture } from "@react-three/drei";
 import FarmGrid from "./FarmGrid";
 import * as THREE from "three";
+import { Suspense } from "react";
 
-export default function Farm() {
+function FarmTerrain() {
   const grassTexture = useTexture("/textures/grass.png");
   
   // Configure grass texture
@@ -10,12 +11,26 @@ export default function Farm() {
   grassTexture.repeat.set(8, 8);
 
   return (
+    <mesh receiveShadow position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+      <planeGeometry args={[20, 20]} />
+      <meshLambertMaterial map={grassTexture} />
+    </mesh>
+  );
+}
+
+export default function Farm() {
+
+  return (
     <group>
       {/* Farm terrain */}
-      <mesh receiveShadow position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[20, 20]} />
-        <meshLambertMaterial map={grassTexture} />
-      </mesh>
+      <Suspense fallback={
+        <mesh receiveShadow position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[20, 20]} />
+          <meshLambertMaterial color="#4ade80" />
+        </mesh>
+      }>
+        <FarmTerrain />
+      </Suspense>
       
       {/* Farm grid for planting */}
       <FarmGrid />

@@ -63,8 +63,10 @@ Using the provided `codemagic.yaml`:
 
 ## Current App Store Information:
 - **App ID**: 6749664824
-- **Bundle ID**: com.pumpkinfarm3d.app (update as needed)
+- **Bundle ID**: com.huntergames.pumpkinpatch
 - **Name**: Pumpkin Farm 3D
+- **Version**: 3.0.0
+- **Build Number**: 21
 
 ## Recommended Next Steps:
 

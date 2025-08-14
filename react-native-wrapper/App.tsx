@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, StatusBar } from 'react-native';
+import { StyleSheet, SafeAreaView, StatusBar, View, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 const GAME_URL = 'https://your-deployed-url.replit.app'; // Replace with your actual Replit URL
@@ -30,9 +30,9 @@ export default function App() {
         onLoadStart={() => console.log('Loading started')}
         onLoadEnd={() => console.log('Loading finished')}
         renderError={() => (
-          <div style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <p>Failed to load the game. Please check your internet connection.</p>
-          </div>
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>Failed to load the game. Please check your internet connection.</Text>
+          </View>
         )}
       />
     </SafeAreaView>
@@ -46,5 +46,16 @@ const styles = StyleSheet.create({
   },
   webview: {
     flex: 1,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    fontSize: 16,
+    color: '#333',
+    textAlign: 'center',
   },
 });
