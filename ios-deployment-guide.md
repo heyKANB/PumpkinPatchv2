@@ -54,12 +54,13 @@ Using the provided `codemagic.yaml`:
 
 ### Setup:
 1. Connect your GitHub/GitLab repository to Codemagic
-2. Add the following environment variables in Codemagic:
+2. Set up "Apple Connect App Mgr" integration in Codemagic dashboard
+3. Add the following environment variables in Codemagic:
    - `APP_STORE_CONNECT_ISSUER_ID`
    - `APP_STORE_CONNECT_KEY_ID`
    - `APP_STORE_CONNECT_PRIVATE_KEY`
-3. Update bundle identifier to match your App ID: `com.pumpkinfarm3d.app`
-4. Push code to trigger automated build and deployment
+4. Bundle identifier is configured as: `com.huntergames.pumpkinpatch`
+5. Push code to trigger automated build and deployment
 
 ## Current App Store Information:
 - **App ID**: 6749664824

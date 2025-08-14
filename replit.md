@@ -5,6 +5,10 @@ This is a 3D pumpkin farming game built with React Three Fiber and Express.js. T
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
+iOS App Configuration: 
+- Bundle ID: com.huntergames.pumpkinpatch
+- App Store Connect Integration: "Apple Connect App Mgr"
+- Version: 3.0.0, Build: 21
 
 # System Architecture
 
