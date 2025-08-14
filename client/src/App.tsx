@@ -3,25 +3,8 @@ import { Suspense, useEffect, useState } from "react";
 import { KeyboardControls } from "@react-three/drei";
 import { useAudio } from "./lib/stores/useAudio";
 import "@fontsource/inter";
-
-// Simple test component
-function TestScene() {
-  return (
-    <>
-      {/* Simple mesh test */}
-      <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshLambertMaterial color="orange" />
-      </mesh>
-      
-      {/* Ground plane */}
-      <mesh position={[0, -1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[10, 10]} />
-        <meshLambertMaterial color="green" />
-      </mesh>
-    </>
-  );
-}
+import FarmingGame from "./components/FarmingGame";
+import GameUI from "./components/GameUI";
 
 // Define control keys for the farming game
 const controls = [
@@ -55,42 +38,47 @@ function App() {
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
       {showCanvas && (
-        <KeyboardControls map={controls}>
-          <Canvas
-            shadows
-            camera={{
-              position: [0, 5, 8],
-              fov: 45,
-              near: 0.1,
-              far: 1000
-            }}
-            gl={{
-              antialias: true,
-              powerPreference: "default"
-            }}
-          >
-            <color attach="background" args={["#87CEEB"]} />
-            
-            {/* Lighting setup */}
-            <ambientLight intensity={0.4} />
-            <directionalLight
-              position={[10, 10, 5]}
-              intensity={1}
-              castShadow
-              shadow-mapSize-width={2048}
-              shadow-mapSize-height={2048}
-              shadow-camera-far={50}
-              shadow-camera-left={-20}
-              shadow-camera-right={20}
-              shadow-camera-top={20}
-              shadow-camera-bottom={-20}
-            />
+        <>
+          <KeyboardControls map={controls}>
+            <Canvas
+              shadows
+              camera={{
+                position: [0, 10, 12],
+                fov: 45,
+                near: 0.1,
+                far: 1000
+              }}
+              gl={{
+                antialias: true,
+                powerPreference: "default"
+              }}
+            >
+              <color attach="background" args={["#87CEEB"]} />
+              
+              {/* Lighting setup */}
+              <ambientLight intensity={0.4} />
+              <directionalLight
+                position={[10, 10, 5]}
+                intensity={1}
+                castShadow
+                shadow-mapSize-width={2048}
+                shadow-mapSize-height={2048}
+                shadow-camera-far={50}
+                shadow-camera-left={-20}
+                shadow-camera-right={20}
+                shadow-camera-top={20}
+                shadow-camera-bottom={-20}
+              />
 
-            <Suspense fallback={null}>
-              <TestScene />
-            </Suspense>
-          </Canvas>
-        </KeyboardControls>
+              <Suspense fallback={null}>
+                <FarmingGame />
+              </Suspense>
+            </Canvas>
+          </KeyboardControls>
+          
+          {/* Game UI overlay - rendered outside Canvas */}
+          <GameUI />
+        </>
       )}
     </div>
   );

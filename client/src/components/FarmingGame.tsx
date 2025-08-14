@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Farm from "./Farm";
-import GameUI from "./GameUI";
 import PlayerController from "./PlayerController";
 import { useFarm } from "../lib/stores/useFarm";
 
@@ -31,7 +30,6 @@ export default function FarmingGame() {
     <>
       <Farm />
       <PlayerController />
-      <GameUI />
     </>
   );
 }
