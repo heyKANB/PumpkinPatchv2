@@ -27,7 +27,7 @@ export default function TouchHandler({ onTouchMove }: TouchHandlerProps) {
   };
 
   const handlePointerMove = (event: PointerEvent) => {
-    if (!isMobile) return;
+    if (!isMobile || !touchStartTime.current) return;
     
     const deltaX = event.clientX - touchStartPos.current.x;
     const deltaY = event.clientY - touchStartPos.current.y;
@@ -43,6 +43,8 @@ export default function TouchHandler({ onTouchMove }: TouchHandlerProps) {
   };
 
   const handlePointerUp = (event: PointerEvent) => {
+    if (!touchStartTime.current) return;
+    
     const touchDuration = Date.now() - touchStartTime.current;
     const deltaX = event.clientX - touchStartPos.current.x;
     const deltaY = event.clientY - touchStartPos.current.y;
@@ -53,7 +55,13 @@ export default function TouchHandler({ onTouchMove }: TouchHandlerProps) {
       handleTap(event);
     }
     
+    // Reset movement when touch ends
+    if (onTouchMove) {
+      onTouchMove(0, 0);
+    }
+    
     isDragging.current = false;
+    touchStartTime.current = 0;
   };
 
   const handleTap = (event: PointerEvent) => {
@@ -89,19 +97,17 @@ export default function TouchHandler({ onTouchMove }: TouchHandlerProps) {
     }
   };
 
-  // Set up event listeners
+  // Set up event listeners once
   useFrame(() => {
     const canvas = gl.domElement;
     
-    // Remove existing listeners
-    canvas.removeEventListener('pointerdown', handlePointerDown);
-    canvas.removeEventListener('pointermove', handlePointerMove);
-    canvas.removeEventListener('pointerup', handlePointerUp);
-    
-    // Add fresh listeners
-    canvas.addEventListener('pointerdown', handlePointerDown);
-    canvas.addEventListener('pointermove', handlePointerMove);
-    canvas.addEventListener('pointerup', handlePointerUp);
+    // Only add listeners if they don't exist
+    if (!canvas.hasAttribute('data-touch-listeners')) {
+      canvas.addEventListener('pointerdown', handlePointerDown);
+      canvas.addEventListener('pointermove', handlePointerMove);
+      canvas.addEventListener('pointerup', handlePointerUp);
+      canvas.setAttribute('data-touch-listeners', 'true');
+    }
   });
 
   return null; // This component doesn't render anything visible

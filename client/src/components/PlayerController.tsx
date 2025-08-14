@@ -54,9 +54,9 @@ export default function PlayerController({ mobileMovement, mobileInteract }: Pla
     if (rightward) direction.x += 1;
     
     // Mobile controls - direct movement
-    if (mobileMovement && (Math.abs(mobileMovement.x) > 0 || Math.abs(mobileMovement.z) > 0)) {
-      direction.x += mobileMovement.x * 5; // Reduced multiplier for better control
-      direction.z += mobileMovement.z * 5;
+    if (mobileMovement && (Math.abs(mobileMovement.x) > 0.001 || Math.abs(mobileMovement.z) > 0.001)) {
+      direction.x += mobileMovement.x * 8; // Increased multiplier for responsiveness
+      direction.z += mobileMovement.z * 8;
     }
     
     if (direction.length() > 0) {
