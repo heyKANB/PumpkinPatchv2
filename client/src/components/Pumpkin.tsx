@@ -71,6 +71,12 @@ export default function Pumpkin({ stage, position, plantedTime, rowIndex, colInd
         onPointerOut={() => setHovered(false)}
         castShadow
         receiveShadow
+        userData={{
+          isPumpkin: true,
+          stage,
+          row: rowIndex,
+          col: colIndex
+        }}
       >
         <sphereGeometry args={stage === 'mature' ? [0.5, 8, 6] : [0.3]} />
         <meshLambertMaterial 

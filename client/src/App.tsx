@@ -55,6 +55,11 @@ function App() {
     // The actual movement is handled through handleMobileMove
   };
 
+  const handleTouchMove = (deltaX: number, deltaY: number) => {
+    // Handle touch movement for player movement
+    setMobileMovement({ x: deltaX, z: deltaY });
+  };
+
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
       {showCanvas && (
@@ -95,6 +100,7 @@ function App() {
                 <FarmingGame 
                   mobileMovement={mobileMovement}
                   mobileInteract={mobileInteract}
+                  onTouchMove={handleTouchMove}
                 />
               </Suspense>
             </Canvas>

@@ -55,7 +55,6 @@ export default function PlayerController({ mobileMovement, mobileInteract }: Pla
     
     // Mobile controls - direct movement
     if (mobileMovement && (Math.abs(mobileMovement.x) > 0 || Math.abs(mobileMovement.z) > 0)) {
-      console.log("Applying mobile movement:", mobileMovement);
       direction.x += mobileMovement.x * 5; // Reduced multiplier for better control
       direction.z += mobileMovement.z * 5;
     }

@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import Farm from "./Farm";
 import PlayerController from "./PlayerController";
+import TouchHandler from "./TouchHandler";
 import { useFarm } from "../lib/stores/useFarm";
 
 interface FarmingGameProps {
   mobileMovement?: { x: number; z: number };
   mobileInteract?: boolean;
+  onTouchMove?: (deltaX: number, deltaY: number) => void;
 }
 
-export default function FarmingGame({ mobileMovement, mobileInteract }: FarmingGameProps) {
+export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMove }: FarmingGameProps) {
   const { initializeFarm, updateGrowth } = useFarm();
   const [gameStarted, setGameStarted] = useState(false);
 
@@ -38,6 +40,7 @@ export default function FarmingGame({ mobileMovement, mobileInteract }: FarmingG
         mobileMovement={mobileMovement}
         mobileInteract={mobileInteract}
       />
+      <TouchHandler onTouchMove={onTouchMove} />
     </>
   );
 }
