@@ -22,7 +22,6 @@ function App() {
   const [showCanvas, setShowCanvas] = useState(false);
   const [mobileMovement, setMobileMovement] = useState({ x: 0, z: 0 });
   const [mobileInteract, setMobileInteract] = useState(false);
-  const [dragTarget, setDragTarget] = useState<{ x: number; z: number } | null>(null);
   const { setHitSound, setSuccessSound } = useAudio();
   const isMobile = useIsMobile();
 
@@ -52,15 +51,8 @@ function App() {
   };
 
   const handleDragMove = (targetX: number, targetZ: number) => {
-    // Constrain target to farm boundaries
-    const bounds = 9;
-    const constrainedX = Math.max(-bounds, Math.min(bounds, targetX));
-    const constrainedZ = Math.max(-bounds, Math.min(bounds, targetZ));
-    
-    setDragTarget({ x: constrainedX, z: constrainedZ });
-    
-    // Clear drag target after a short delay to allow for smooth movement
-    setTimeout(() => setDragTarget(null), 50);
+    // For now, we'll use this as a placeholder since MobileControls expects it
+    // The actual movement is handled through handleMobileMove
   };
 
   return (
@@ -103,7 +95,6 @@ function App() {
                 <FarmingGame 
                   mobileMovement={mobileMovement}
                   mobileInteract={mobileInteract}
-                  dragTarget={dragTarget}
                 />
               </Suspense>
             </Canvas>

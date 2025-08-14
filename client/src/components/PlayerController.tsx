@@ -9,10 +9,9 @@ import * as THREE from "three";
 interface PlayerControllerProps {
   mobileMovement?: { x: number; z: number };
   mobileInteract?: boolean;
-  dragTarget?: { x: number; z: number } | null;
 }
 
-export default function PlayerController({ mobileMovement, mobileInteract, dragTarget }: PlayerControllerProps) {
+export default function PlayerController({ mobileMovement, mobileInteract }: PlayerControllerProps) {
   const playerRef = useRef<THREE.Mesh>(null);
   const [, getKeys] = useKeyboardControls();
   const { plantPumpkin, playerInventory } = useFarm();
@@ -45,43 +44,31 @@ export default function PlayerController({ mobileMovement, mobileInteract, dragT
     const { forward, backward, leftward, rightward, interact } = getKeys();
     const speed = 5;
     
-    // Movement - handle drag target or directional movement
-    if (dragTarget) {
-      // Smooth movement toward drag target
-      const currentPos = playerRef.current.position;
-      const targetPos = new THREE.Vector3(dragTarget.x, currentPos.y, dragTarget.z);
-      
-      // Calculate direction to target
-      const direction = targetPos.clone().sub(currentPos);
-      const distance = direction.length();
-      
-      // Only move if we're far enough from target
-      if (distance > 0.5) {
-        direction.normalize();
-        direction.multiplyScalar(Math.min(distance * 8, speed) * delta); // Smooth approach
-        playerRef.current.position.add(direction);
-      }
-    } else {
-      // Traditional movement - combine keyboard and mobile controls
-      const direction = new THREE.Vector3();
-      
-      // Keyboard controls
-      if (forward) direction.z -= 1;
-      if (backward) direction.z += 1;
-      if (leftward) direction.x -= 1;
-      if (rightward) direction.x += 1;
-      
-      // Mobile controls (when not dragging)
-      if (mobileMovement) {
-        direction.x += mobileMovement.x;
-        direction.z += mobileMovement.z;
-      }
-      
-      if (direction.length() > 0) {
+    // Movement - combine keyboard and mobile controls
+    const direction = new THREE.Vector3();
+    
+    // Keyboard controls
+    if (forward) direction.z -= 1;
+    if (backward) direction.z += 1;
+    if (leftward) direction.x -= 1;
+    if (rightward) direction.x += 1;
+    
+    // Mobile controls - direct movement
+    if (mobileMovement && (Math.abs(mobileMovement.x) > 0 || Math.abs(mobileMovement.z) > 0)) {
+      console.log("Applying mobile movement:", mobileMovement);
+      direction.x += mobileMovement.x * 5; // Reduced multiplier for better control
+      direction.z += mobileMovement.z * 5;
+    }
+    
+    if (direction.length() > 0) {
+      // For mobile movement, don't normalize to preserve the scaling
+      if (mobileMovement && (Math.abs(mobileMovement.x) > 0 || Math.abs(mobileMovement.z) > 0)) {
+        direction.multiplyScalar(speed * delta);
+      } else {
         direction.normalize();
         direction.multiplyScalar(speed * delta);
-        playerRef.current.position.add(direction);
       }
+      playerRef.current.position.add(direction);
     }
     
     // Keep player within farm boundaries

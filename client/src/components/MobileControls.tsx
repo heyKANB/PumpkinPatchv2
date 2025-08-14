@@ -37,6 +37,7 @@ export default function MobileControls({ onMove, onInteract, onDragMove }: Mobil
       return; // Don't start dragging if touching button area
     }
     
+    console.log("Touch started at:", touch.clientX, touch.clientY);
     setLastTouchPos({ x: touch.clientX, y: touch.clientY });
     setIsDragging(true);
   };
@@ -48,31 +49,25 @@ export default function MobileControls({ onMove, onInteract, onDragMove }: Mobil
     const touch = e.touches[0];
     const rect = screenRef.current.getBoundingClientRect();
     
-    // Calculate movement delta
+    // Calculate movement delta from last position
     const deltaX = touch.clientX - lastTouchPos.x;
     const deltaY = touch.clientY - lastTouchPos.y;
     
-    // Convert screen coordinates to world coordinates
-    // Screen center is (0,0) in world coordinates
-    const screenCenterX = rect.width / 2;
-    const screenCenterY = rect.height / 2;
+    // Convert delta to movement direction (much simpler approach)
+    const sensitivity = 0.1; // Increased sensitivity for better responsiveness
+    const movementX = deltaX * sensitivity;
+    const movementZ = deltaY * sensitivity; // Positive Y moves forward in 3D space
     
-    // Calculate target position relative to screen center
-    const targetScreenX = touch.clientX - rect.left - screenCenterX;
-    const targetScreenY = touch.clientY - rect.top - screenCenterY;
+    console.log("Touch movement:", { deltaX, deltaY, movementX, movementZ });
     
-    // Convert to world coordinates (scale and flip Y)
-    const worldScale = 16 / Math.min(rect.width, rect.height); // Adjust scale as needed
-    const targetX = targetScreenX * worldScale;
-    const targetZ = targetScreenY * worldScale; // Don't flip Y since we want intuitive touch controls
-    
-    // Send target position for smooth movement
-    onDragMove(targetX, targetZ);
+    // Use continuous movement instead of target position
+    onMove({ x: movementX, z: movementZ });
     
     setLastTouchPos({ x: touch.clientX, y: touch.clientY });
   };
 
   const handleTouchEnd = () => {
+    console.log("Touch ended");
     setIsDragging(false);
     // Stop any continuous movement
     onMove({ x: 0, z: 0 });
