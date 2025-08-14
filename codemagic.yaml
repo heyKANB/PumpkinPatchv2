@@ -1,6 +1,6 @@
 workflows:
-  react-native-ios:
-    name: iOS React Native App
+  capacitor-ios:
+    name: Capacitor iOS App Build
     max_build_duration: 120
     instance_type: mac_mini_m2
     integrations:
@@ -18,25 +18,30 @@ workflows:
       xcode: latest
       cocoapods: default
     scripts:
-      - name: Install npm dependencies
+      - name: Install dependencies
         script: |
           npm ci
+          npm install -g @capacitor/cli @capacitor/core @capacitor/ios
+      - name: Build web application
+        script: |
+          npm run build
+      - name: Initialize and sync Capacitor
+        script: |
+          npx cap sync ios
       - name: Install CocoaPods dependencies
         script: |
-          cd ios && pod install
-      - name: Set up provisioning profiles
+          cd ios/App && pod install
+      - name: Set up code signing settings on Xcode project
+        script: xcode-project use-profiles
+      - name: Set build number to 21
         script: |
-          keychain initialize
-      - name: Set build number
-        script: |
-          cd ios
-          # Start with build number 21 for version 3.0.0
+          cd ios/App
           agvtool new-version -all 21
       - name: Build ipa for distribution
         script: |
           xcode-project build-ipa \
-            --workspace ios/PumpkinFarm3D.xcworkspace \
-            --scheme PumpkinFarm3D \
+            --workspace ios/App/App.xcworkspace \
+            --scheme App \
             --config Release
     artifacts:
       - build/ios/ipa/*.ipa
@@ -52,11 +57,8 @@ workflows:
           failure: false
       app_store_connect:
         auth: integration
-        submit_to_testflight: false
-        beta_groups:
-          - group name 1
-          - group name 2
-        submit_to_app_store: true
+        submit_to_testflight: true
+        submit_to_app_store: false
 
   pwa-build:
     name: PWA Build and Deploy
@@ -71,12 +73,11 @@ workflows:
       - name: Build PWA
         script: |
           npm run build
-      - name: Generate PWA assets
+      - name: Generate build artifacts
         script: |
-          # Add PWA asset generation if needed
-          echo "PWA build complete"
+          echo "PWA built successfully. Ready for deployment."
     artifacts:
-      - dist/**/*
+      - client/dist/**
     publishing:
       email:
         recipients:

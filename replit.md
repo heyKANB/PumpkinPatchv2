@@ -9,6 +9,8 @@ iOS App Configuration:
 - Bundle ID: com.huntergames.pumpkinpatch
 - App Store Connect Integration: "Apple Connect App Mgr"
 - Version: 3.0.0, Build: 21
+- Deployment Method: Capacitor iOS (native app)
+- CI/CD Pipeline: Codemagic with automated build and TestFlight submission
 
 # System Architecture
 

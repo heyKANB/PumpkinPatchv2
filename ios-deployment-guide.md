@@ -18,30 +18,30 @@ Your game is now PWA-ready and can be "installed" on iOS devices:
 - ✅ Works offline with service worker caching
 - ✅ Can be distributed immediately
 
-## Option 2: React Native WebView App - For App Store
+## Option 2: Capacitor iOS App - For App Store
 
-If you want to publish on the App Store, use the WebView wrapper:
+Using Capacitor to create a native iOS app for App Store distribution.
 
-### Setup:
-1. Copy files from `react-native-wrapper/` to a new project
-2. Install Expo CLI: `npm install -g @expo/eas-cli`
-3. Create Expo account and project
-4. Update the `GAME_URL` in App.tsx to your deployed Replit URL
+### Current Configuration:
+- **Bundle ID**: com.huntergames.pumpkinpatch  
+- **App Name**: Pumpkin Farm 3D
+- **Version**: 3.0.0, Build: 21
+- **App Store Connect Integration**: "Apple Connect App Mgr"
 
-### Build and Deploy:
+### Local Development:
 ```bash
-# Install dependencies
-npm install
+# Build web assets first
+npm run build
 
-# Configure EAS
-eas build:configure
+# Initialize iOS platform
+npx cap sync ios
 
-# Build for iOS
-eas build --platform ios
-
-# Submit to App Store (requires Apple Developer account)
-eas submit --platform ios
+# Open in Xcode for development
+npx cap open ios
 ```
+
+### Automated CI/CD with Codemagic:
+The project is configured for automatic building and App Store submission via Codemagic using the `capacitor-ios` workflow.
 
 ## Option 3: Codemagic CI/CD (Alternative to EAS)
 
