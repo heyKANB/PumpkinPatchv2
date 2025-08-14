@@ -2,7 +2,7 @@
   "expo": {
     "name": "Pumpkin Farm 3D",
     "slug": "pumpkin-farm-3d",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "orientation": "portrait",
     "icon": "./client/public/icon-192.png",
     "userInterfaceStyle": "light",
@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.huntergames.pumpkinpatch",
-      "buildNumber": "21",
+      "buildNumber": "22",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses camera for AR features (future feature)",
         "NSMicrophoneUsageDescription": "This app uses microphone for enhanced gameplay audio",
