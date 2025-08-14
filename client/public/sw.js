@@ -1,5 +1,5 @@
 // Service Worker for PWA caching
-const CACHE_NAME = 'pumpkin-farm-3d-v1';
+const CACHE_NAME = 'pumpkin-farm-3d-v3.0.0';
 const urlsToCache = [
   '/',
   '/src/main.tsx',
