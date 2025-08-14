@@ -1,0 +1,86 @@
+workflows:
+  react-native-ios:
+    name: iOS React Native App
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.pumpkinfarm3d.app
+      vars:
+        APP_STORE_CONNECT_ISSUER_ID: $APP_STORE_CONNECT_ISSUER_ID
+        APP_STORE_CONNECT_KEY_ID: $APP_STORE_CONNECT_KEY_ID
+        APP_STORE_CONNECT_PRIVATE_KEY: $APP_STORE_CONNECT_PRIVATE_KEY
+        APP_ID: 6749664824
+      node: 18
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install npm dependencies
+        script: |
+          npm ci
+      - name: Install CocoaPods dependencies
+        script: |
+          cd ios && pod install
+      - name: Set up provisioning profiles
+        script: |
+          keychain initialize
+      - name: Increment build number
+        script: |
+          cd ios
+          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-app-store-build-number "$APP_ID")
+          agvtool new-version -all $(($LATEST_BUILD_NUMBER + 1))
+      - name: Build ipa for distribution
+        script: |
+          xcode-project build-ipa \
+            --workspace ios/PumpkinFarm3D.xcworkspace \
+            --scheme PumpkinFarm3D \
+            --config Release
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      email:
+        recipients:
+          - user@example.com
+        notify:
+          success: true
+          failure: false
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        beta_groups:
+          - group name 1
+          - group name 2
+        submit_to_app_store: true
+
+  pwa-build:
+    name: PWA Build and Deploy
+    max_build_duration: 60
+    instance_type: linux_x2
+    environment:
+      node: 18
+    scripts:
+      - name: Install dependencies
+        script: |
+          npm ci
+      - name: Build PWA
+        script: |
+          npm run build
+      - name: Generate PWA assets
+        script: |
+          # Add PWA asset generation if needed
+          echo "PWA build complete"
+    artifacts:
+      - dist/**/*
+    publishing:
+      email:
+        recipients:
+          - user@example.com
+        notify:
+          success: true
+          failure: false

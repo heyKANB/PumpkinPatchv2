@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "Pumpkin Farm 3D",
+    "slug": "pumpkin-farm-3d",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./client/public/icon-192.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./client/public/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#4ade80"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.pumpkinfarm3d.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses camera for AR features (future feature)",
+        "NSMicrophoneUsageDescription": "This app uses microphone for enhanced gameplay audio"
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./client/public/icon-192.png",
+        "backgroundColor": "#4ade80"
+      },
+      "package": "com.pumpkinfarm3d.app"
+    },
+    "web": {
+      "favicon": "./client/public/favicon.ico",
+      "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "replace-with-your-expo-project-id"
+      }
+    },
+    "owner": "your-expo-username"
+  }
+}

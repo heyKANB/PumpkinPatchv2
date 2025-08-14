@@ -1,0 +1,33 @@
+{
+  "name": "Pumpkin Farm 3D",
+  "short_name": "PumpkinFarm3D",
+  "description": "A 3D pumpkin farming simulation game with immersive touch controls",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "portrait-primary",
+  "theme_color": "#4ade80",
+  "background_color": "#ffffff",
+  "categories": ["games", "entertainment", "simulation"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ]
+}
