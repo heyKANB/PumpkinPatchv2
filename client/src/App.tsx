@@ -3,11 +3,12 @@ import { Suspense, useEffect, useState } from "react";
 import { KeyboardControls } from "@react-three/drei";
 import { useAudio } from "./lib/stores/useAudio";
 import "@fontsource/inter";
-import FarmingGame from "./components/FarmingGame";
+import ResponsiveCanvas from "./components/ResponsiveCanvas";
 import GameUI from "./components/GameUI";
 import MobileControls from "./components/MobileControls";
 import MobileDebugInfo from "./components/MobileDebugInfo";
 import { useIsMobile } from "./hooks/use-is-mobile";
+import { useDeviceInfo } from "./hooks/use-device-info";
 
 // Define control keys for the farming game
 const controls = [
@@ -25,6 +26,7 @@ function App() {
   const [mobileInteract, setMobileInteract] = useState(false);
   const { setHitSound, setSuccessSound } = useAudio();
   const isMobile = useIsMobile();
+  const deviceInfo = useDeviceInfo();
 
   // Initialize audio on component mount
   useEffect(() => {
@@ -66,45 +68,11 @@ function App() {
       {showCanvas && (
         <>
           <KeyboardControls map={controls}>
-            <Canvas
-              shadows={!isMobile} // Disable shadows on mobile for performance
-              camera={{
-                position: [0, isMobile ? 8 : 10, isMobile ? 10 : 12],
-                fov: isMobile ? 60 : 45, // Wider FOV for mobile
-                near: 0.1,
-                far: 1000
-              }}
-              gl={{
-                antialias: !isMobile, // Disable antialiasing on mobile for performance
-                powerPreference: isMobile ? "low-power" : "default"
-              }}
-              dpr={isMobile ? 1 : window.devicePixelRatio} // Limit pixel ratio on mobile
-            >
-              <color attach="background" args={["#87CEEB"]} />
-              
-              {/* Lighting setup */}
-              <ambientLight intensity={0.4} />
-              <directionalLight
-                position={[10, 10, 5]}
-                intensity={1}
-                castShadow
-                shadow-mapSize-width={2048}
-                shadow-mapSize-height={2048}
-                shadow-camera-far={50}
-                shadow-camera-left={-20}
-                shadow-camera-right={20}
-                shadow-camera-top={20}
-                shadow-camera-bottom={-20}
-              />
-
-              <Suspense fallback={null}>
-                <FarmingGame 
-                  mobileMovement={mobileMovement}
-                  mobileInteract={mobileInteract}
-                  onTouchMove={handleTouchMove}
-                />
-              </Suspense>
-            </Canvas>
+            <ResponsiveCanvas
+              mobileMovement={mobileMovement}
+              mobileInteract={mobileInteract}
+              onTouchMove={handleTouchMove}
+            />
           </KeyboardControls>
           
           {/* Game UI overlay - rendered outside Canvas */}

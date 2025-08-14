@@ -7,7 +7,9 @@ export default function MobileDebugInfo() {
     touchSupported: false,
     pointerSupported: false,
     platform: '',
-    standalone: false
+    standalone: false,
+    devicePixelRatio: 1,
+    aspectRatio: 1
   });
   const isMobile = useIsMobile();
 
@@ -17,7 +19,9 @@ export default function MobileDebugInfo() {
       touchSupported: 'ontouchstart' in window,
       pointerSupported: 'onpointerdown' in window,
       platform: navigator.platform,
-      standalone: (window.navigator as any).standalone === true
+      standalone: (window.navigator as any).standalone === true,
+      devicePixelRatio: window.devicePixelRatio || 1,
+      aspectRatio: window.innerWidth / window.innerHeight
     });
   }, []);
 
@@ -39,11 +43,12 @@ export default function MobileDebugInfo() {
       maxWidth: '300px'
     }}>
       <div>isMobile: {isMobile ? 'true' : 'false'}</div>
+      <div>Screen: {window.innerWidth}x{window.innerHeight}</div>
+      <div>DPR: {debugInfo.devicePixelRatio}</div>
+      <div>Aspect: {debugInfo.aspectRatio.toFixed(2)}</div>
       <div>Touch: {debugInfo.touchSupported ? 'supported' : 'not supported'}</div>
-      <div>Pointer: {debugInfo.pointerSupported ? 'supported' : 'not supported'}</div>
       <div>Platform: {debugInfo.platform}</div>
       <div>Standalone: {debugInfo.standalone ? 'true' : 'false'}</div>
-      <div>UA: {debugInfo.userAgent.slice(0, 50)}...</div>
     </div>
   );
 }
