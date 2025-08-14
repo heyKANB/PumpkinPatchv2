@@ -53,20 +53,15 @@ export default function PlayerController({ mobileMovement, mobileInteract }: Pla
     if (leftward) direction.x -= 1;
     if (rightward) direction.x += 1;
     
-    // Mobile controls - direct movement
+    // Mobile controls - smooth continuous movement
     if (mobileMovement && (Math.abs(mobileMovement.x) > 0.001 || Math.abs(mobileMovement.z) > 0.001)) {
-      direction.x += mobileMovement.x * 8; // Increased multiplier for responsiveness
-      direction.z += mobileMovement.z * 8;
+      direction.x += mobileMovement.x;
+      direction.z += mobileMovement.z;
     }
     
     if (direction.length() > 0) {
-      // For mobile movement, don't normalize to preserve the scaling
-      if (mobileMovement && (Math.abs(mobileMovement.x) > 0 || Math.abs(mobileMovement.z) > 0)) {
-        direction.multiplyScalar(speed * delta);
-      } else {
-        direction.normalize();
-        direction.multiplyScalar(speed * delta);
-      }
+      direction.normalize();
+      direction.multiplyScalar(speed * delta);
       playerRef.current.position.add(direction);
     }
     

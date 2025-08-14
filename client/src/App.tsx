@@ -56,13 +56,8 @@ function App() {
   };
 
   const handleTouchMove = (deltaX: number, deltaY: number) => {
-    // Handle touch movement for player movement
+    // Handle touch movement for player movement with smooth continuous motion
     setMobileMovement({ x: deltaX, z: deltaY });
-    
-    // Clear movement after a short delay if no new input
-    setTimeout(() => {
-      setMobileMovement({ x: 0, z: 0 });
-    }, 100);
   };
 
   return (

@@ -33,12 +33,15 @@ export default function TouchHandler({ onTouchMove }: TouchHandlerProps) {
     const deltaY = event.clientY - touchStartPos.current.y;
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     
-    if (distance > 10) { // Threshold for dragging
+    if (distance > 5) { // Lower threshold for more responsive dragging
       isDragging.current = true;
       if (onTouchMove) {
-        onTouchMove(deltaX * 0.01, deltaY * 0.01);
+        // Normalize the movement for smooth continuous motion
+        const normalizedX = Math.max(-1, Math.min(1, deltaX / 50));
+        const normalizedY = Math.max(-1, Math.min(1, deltaY / 50));
+        onTouchMove(normalizedX, normalizedY);
       }
-      touchStartPos.current = { x: event.clientX, y: event.clientY };
+      // Don't update touchStartPos to maintain relative movement
     }
   };
 
