@@ -6,6 +6,7 @@ import "@fontsource/inter";
 import FarmingGame from "./components/FarmingGame";
 import GameUI from "./components/GameUI";
 import MobileControls from "./components/MobileControls";
+import MobileDebugInfo from "./components/MobileDebugInfo";
 import { useIsMobile } from "./hooks/use-is-mobile";
 
 // Define control keys for the farming game
@@ -117,6 +118,9 @@ function App() {
               onDragMove={handleDragMove}
             />
           )}
+          
+          {/* Debug info for development */}
+          <MobileDebugInfo />
         </>
       )}
     </div>

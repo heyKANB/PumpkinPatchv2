@@ -34,5 +34,9 @@
 canvas {
   width: 100% !important;
   height: 100% !important;
-  touch-action: none;
+  touch-action: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
 }
