@@ -41,7 +41,7 @@ npx cap open ios
 ```
 
 ### Automated CI/CD with Codemagic:
-The project is configured for automatic building and App Store submission via Codemagic using the `capacitor-ios` workflow.
+The project is configured for automatic building and App Store submission via Codemagic using the `react-native-ios` workflow with Node.js 20 (required for Capacitor CLI).
 
 ## Option 3: Codemagic CI/CD (Alternative to EAS)
 
