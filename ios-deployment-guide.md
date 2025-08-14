@@ -27,6 +27,8 @@ Using Capacitor to create a native iOS app for App Store distribution.
 - **App Name**: Pumpkin Farm 3D
 - **Version**: 3.0.0, Build: 21
 - **App Store Connect Integration**: "Apple Connect App Mgr"
+- **App Tracking Transparency**: Implemented with NSUserTrackingUsageDescription
+- **Privacy Compliance**: Full iOS 14.5+ ATT framework integration
 
 ### Local Development:
 ```bash

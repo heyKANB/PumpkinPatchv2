@@ -1,5 +1,7 @@
 import UIKit
 import Capacitor
+import AppTrackingTransparency
+import AdSupport
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,6 +29,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        
+        // Request tracking authorization for iOS 14.5+
+        if #available(iOS 14.5, *) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                ATTrackingManager.requestTrackingAuthorization { status in
+                    switch status {
+                    case .authorized:
+                        print("App Tracking: Authorized")
+                        // User has granted permission for tracking
+                        let idfa = ASIdentifierManager.shared().advertisingIdentifier
+                        print("IDFA: \(idfa)")
+                    case .denied:
+                        print("App Tracking: Denied")
+                        // User has denied permission for tracking
+                    case .restricted:
+                        print("App Tracking: Restricted")
+                        // Tracking is restricted (parental controls, etc.)
+                    case .notDetermined:
+                        print("App Tracking: Not Determined")
+                        // Permission has not been requested yet
+                    @unknown default:
+                        print("App Tracking: Unknown status")
+                    }
+                }
+            }
+        } else {
+            // For iOS versions below 14.5, tracking is allowed by default
+            print("App Tracking: iOS version below 14.5, tracking allowed by default")
+            let idfa = ASIdentifierManager.shared().advertisingIdentifier
+            print("IDFA: \(idfa)")
+        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

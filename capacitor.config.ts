@@ -9,7 +9,13 @@ const config: CapacitorConfig = {
     androidScheme: 'https'
   },
   ios: {
-    scheme: 'Pumpkin Farm 3D'
+    scheme: 'Pumpkin Farm 3D',
+    contentInset: 'automatic'
+  },
+  plugins: {
+    CapacitorHttp: {
+      enabled: true
+    }
   }
 };
 

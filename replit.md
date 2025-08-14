@@ -11,6 +11,8 @@ iOS App Configuration:
 - Version: 3.0.0, Build: 21
 - Deployment Method: Capacitor iOS (native app)
 - CI/CD Pipeline: Codemagic with automated build and TestFlight submission
+- Privacy Compliance: App Tracking Transparency (ATT) framework implemented
+- User Tracking Description: "This app would like to track your activity across other companies' apps and websites to provide personalized ads and improve your gaming experience."
 
 # System Architecture
 

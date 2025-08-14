@@ -20,7 +20,8 @@
       "buildNumber": "21",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses camera for AR features (future feature)",
-        "NSMicrophoneUsageDescription": "This app uses microphone for enhanced gameplay audio"
+        "NSMicrophoneUsageDescription": "This app uses microphone for enhanced gameplay audio",
+        "NSUserTrackingUsageDescription": "This app would like to track your activity across other companies' apps and websites to provide personalized ads and improve your gaming experience."
       },
       "config": {
         "usesNonExemptEncryption": false

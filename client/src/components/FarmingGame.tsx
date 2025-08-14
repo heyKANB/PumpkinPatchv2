@@ -3,6 +3,7 @@ import Farm from "./Farm";
 import PlayerController from "./PlayerController";
 import TouchHandler from "./TouchHandler";
 import { useFarm } from "../lib/stores/useFarm";
+import { AppTrackingManager, GameTrackingEvents } from "../lib/tracking";
 
 interface FarmingGameProps {
   mobileMovement?: { x: number; z: number };
@@ -18,6 +19,12 @@ export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMov
   useEffect(() => {
     initializeFarm();
     setGameStarted(true);
+    
+    // Track game start event
+    AppTrackingManager.logTrackingEvent(GameTrackingEvents.GAME_STARTED, {
+      timestamp: new Date().toISOString(),
+      platform: 'ios'
+    });
   }, [initializeFarm]);
 
   // Growth update timer
