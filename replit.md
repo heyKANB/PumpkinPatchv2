@@ -1,6 +1,6 @@
 # Overview
 
-This is a 3D pumpkin farming game built with React Three Fiber and Express.js. The application features a fullstack architecture with a React frontend rendered in a 3D canvas environment and an Express.js backend with PostgreSQL database integration. Players can plant pumpkin seeds, watch them grow through different stages, and harvest mature pumpkins in an interactive 3D farm environment.
+This is a 3D pumpkin farming game built with React Three Fiber and Express.js. The application features a fullstack architecture with a React frontend rendered in a 3D canvas environment and an Express.js backend with PostgreSQL database integration. Players can plant pumpkin seeds, watch them grow through different stages, and harvest mature pumpkins in an interactive 3D farm environment. The game is optimized for both desktop and mobile devices with touch-and-drag controls for mobile users.
 
 # User Preferences
 
@@ -25,10 +25,12 @@ Preferred communication style: Simple, everyday language.
 
 ## 3D Game Engine
 - **Canvas-based Rendering**: Full-screen 3D environment with camera controls
-- **Keyboard Controls**: WASD movement and E/Space for interaction using `@react-three/drei`
+- **Multi-platform Controls**: WASD keyboard controls for desktop, touch-and-drag for mobile
+- **Mobile Touch Interface**: Full-screen drag controls with touch-to-move farmer functionality
 - **Component-based 3D Objects**: Modular pumpkin, farm, and UI components
 - **Growth Animation System**: Time-based pumpkin growth with visual stage transitions
 - **Audio Integration**: Sound effects for planting and harvesting actions
+- **Mobile Optimizations**: Performance settings for mobile devices (disabled shadows, reduced antialiasing)
 
 ## Data Storage
 - **Drizzle ORM**: Type-safe database interactions with PostgreSQL
@@ -41,6 +43,8 @@ Preferred communication style: Simple, everyday language.
 - **Growth Stages**: Four-stage pumpkin lifecycle (seed → sprout → growing → mature)
 - **Inventory System**: Seed management and harvest tracking
 - **Real-time Updates**: 2-second growth intervals for dynamic gameplay
+- **Cross-platform Input**: Supports both keyboard (desktop) and touch controls (mobile)
+- **Touch-and-Drag Movement**: Mobile users can drag anywhere on screen to move the farmer
 
 # External Dependencies
 

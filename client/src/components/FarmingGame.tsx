@@ -6,9 +6,10 @@ import { useFarm } from "../lib/stores/useFarm";
 interface FarmingGameProps {
   mobileMovement?: { x: number; z: number };
   mobileInteract?: boolean;
+  dragTarget?: { x: number; z: number } | null;
 }
 
-export default function FarmingGame({ mobileMovement, mobileInteract }: FarmingGameProps) {
+export default function FarmingGame({ mobileMovement, mobileInteract, dragTarget }: FarmingGameProps) {
   const { initializeFarm, updateGrowth } = useFarm();
   const [gameStarted, setGameStarted] = useState(false);
 
@@ -37,6 +38,7 @@ export default function FarmingGame({ mobileMovement, mobileInteract }: FarmingG
       <PlayerController 
         mobileMovement={mobileMovement}
         mobileInteract={mobileInteract}
+        dragTarget={dragTarget}
       />
     </>
   );

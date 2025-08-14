@@ -9,9 +9,10 @@ import * as THREE from "three";
 interface PlayerControllerProps {
   mobileMovement?: { x: number; z: number };
   mobileInteract?: boolean;
+  dragTarget?: { x: number; z: number } | null;
 }
 
-export default function PlayerController({ mobileMovement, mobileInteract }: PlayerControllerProps) {
+export default function PlayerController({ mobileMovement, mobileInteract, dragTarget }: PlayerControllerProps) {
   const playerRef = useRef<THREE.Mesh>(null);
   const [, getKeys] = useKeyboardControls();
   const { plantPumpkin, playerInventory } = useFarm();
@@ -44,25 +45,43 @@ export default function PlayerController({ mobileMovement, mobileInteract }: Pla
     const { forward, backward, leftward, rightward, interact } = getKeys();
     const speed = 5;
     
-    // Movement - combine keyboard and mobile controls
-    const direction = new THREE.Vector3();
-    
-    // Keyboard controls
-    if (forward) direction.z -= 1;
-    if (backward) direction.z += 1;
-    if (leftward) direction.x -= 1;
-    if (rightward) direction.x += 1;
-    
-    // Mobile controls
-    if (mobileMovement) {
-      direction.x += mobileMovement.x;
-      direction.z += mobileMovement.z;
-    }
-    
-    if (direction.length() > 0) {
-      direction.normalize();
-      direction.multiplyScalar(speed * delta);
-      playerRef.current.position.add(direction);
+    // Movement - handle drag target or directional movement
+    if (dragTarget) {
+      // Smooth movement toward drag target
+      const currentPos = playerRef.current.position;
+      const targetPos = new THREE.Vector3(dragTarget.x, currentPos.y, dragTarget.z);
+      
+      // Calculate direction to target
+      const direction = targetPos.clone().sub(currentPos);
+      const distance = direction.length();
+      
+      // Only move if we're far enough from target
+      if (distance > 0.5) {
+        direction.normalize();
+        direction.multiplyScalar(Math.min(distance * 8, speed) * delta); // Smooth approach
+        playerRef.current.position.add(direction);
+      }
+    } else {
+      // Traditional movement - combine keyboard and mobile controls
+      const direction = new THREE.Vector3();
+      
+      // Keyboard controls
+      if (forward) direction.z -= 1;
+      if (backward) direction.z += 1;
+      if (leftward) direction.x -= 1;
+      if (rightward) direction.x += 1;
+      
+      // Mobile controls (when not dragging)
+      if (mobileMovement) {
+        direction.x += mobileMovement.x;
+        direction.z += mobileMovement.z;
+      }
+      
+      if (direction.length() > 0) {
+        direction.normalize();
+        direction.multiplyScalar(speed * delta);
+        playerRef.current.position.add(direction);
+      }
     }
     
     // Keep player within farm boundaries

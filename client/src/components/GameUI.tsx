@@ -129,7 +129,7 @@ export default function GameUI() {
           textAlign: 'center',
         }}>
           <div style={{ color: '#90EE90' }}>
-            Use joystick to move, green button to plant, tap orange pumpkins to harvest
+            Drag anywhere to move farmer, green button to plant, tap orange pumpkins to harvest
           </div>
         </div>
       )}
