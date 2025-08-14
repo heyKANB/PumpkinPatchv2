@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useKeyboardControls } from "@react-three/drei";
 import { useFarm } from "../lib/stores/useFarm";
@@ -6,11 +6,37 @@ import { useAudio } from "../lib/stores/useAudio";
 import { FARM_SIZE } from "../lib/constants";
 import * as THREE from "three";
 
-export default function PlayerController() {
+interface PlayerControllerProps {
+  mobileMovement?: { x: number; z: number };
+  mobileInteract?: boolean;
+}
+
+export default function PlayerController({ mobileMovement, mobileInteract }: PlayerControllerProps) {
   const playerRef = useRef<THREE.Mesh>(null);
   const [, getKeys] = useKeyboardControls();
   const { plantPumpkin, playerInventory } = useFarm();
   const { playHit } = useAudio();
+  const [lastInteractTime, setLastInteractTime] = useState(0);
+
+  const handlePlanting = () => {
+    if (!playerRef.current || playerInventory.seeds <= 0) return;
+
+    const now = Date.now();
+    if (now - lastInteractTime < 500) return; // Prevent spam clicking
+    
+    const playerPos = playerRef.current.position;
+    const gridX = Math.round((playerPos.x + FARM_SIZE) / 2);
+    const gridZ = Math.round((playerPos.z + FARM_SIZE) / 2);
+    
+    // Check if position is within farm grid
+    if (gridX >= 0 && gridX < FARM_SIZE && gridZ >= 0 && gridZ < FARM_SIZE) {
+      const success = plantPumpkin(gridZ, gridX);
+      if (success) {
+        playHit();
+        setLastInteractTime(now);
+      }
+    }
+  };
 
   useFrame((state, delta) => {
     if (!playerRef.current) return;
@@ -18,36 +44,35 @@ export default function PlayerController() {
     const { forward, backward, leftward, rightward, interact } = getKeys();
     const speed = 5;
     
-    // Movement
+    // Movement - combine keyboard and mobile controls
     const direction = new THREE.Vector3();
+    
+    // Keyboard controls
     if (forward) direction.z -= 1;
     if (backward) direction.z += 1;
     if (leftward) direction.x -= 1;
     if (rightward) direction.x += 1;
     
-    direction.normalize();
-    direction.multiplyScalar(speed * delta);
+    // Mobile controls
+    if (mobileMovement) {
+      direction.x += mobileMovement.x;
+      direction.z += mobileMovement.z;
+    }
     
-    playerRef.current.position.add(direction);
+    if (direction.length() > 0) {
+      direction.normalize();
+      direction.multiplyScalar(speed * delta);
+      playerRef.current.position.add(direction);
+    }
     
     // Keep player within farm boundaries
     const bounds = 9;
     playerRef.current.position.x = Math.max(-bounds, Math.min(bounds, playerRef.current.position.x));
     playerRef.current.position.z = Math.max(-bounds, Math.min(bounds, playerRef.current.position.z));
     
-    // Planting interaction
-    if (interact && playerInventory.seeds > 0) {
-      const playerPos = playerRef.current.position;
-      const gridX = Math.round((playerPos.x + FARM_SIZE) / 2);
-      const gridZ = Math.round((playerPos.z + FARM_SIZE) / 2);
-      
-      // Check if position is within farm grid
-      if (gridX >= 0 && gridX < FARM_SIZE && gridZ >= 0 && gridZ < FARM_SIZE) {
-        const success = plantPumpkin(gridZ, gridX);
-        if (success) {
-          playHit(); // Use hit sound for planting
-        }
-      }
+    // Planting interaction - keyboard or mobile
+    if ((interact || mobileInteract) && playerInventory.seeds > 0) {
+      handlePlanting();
     }
     
     // Update camera to follow player
