@@ -64,7 +64,14 @@ function App() {
   };
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ 
+      width: '100vw', 
+      height: '100vh', 
+      position: 'relative', 
+      overflow: 'hidden',
+      // Use full viewport height on mobile, accounting for browser UI
+      minHeight: isMobile ? '100vh' : 'auto'
+    }}>
       {showCanvas && (
         <>
           <KeyboardControls map={controls}>

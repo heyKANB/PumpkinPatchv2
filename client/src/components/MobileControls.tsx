@@ -14,18 +14,20 @@ export default function MobileControls({ onMove, onInteract, onDragMove }: Mobil
   if (!isMobile) return null;
 
   return (
-    <div style={{
-      position: 'absolute',
-      bottom: '20px',
-      left: '0',
-      right: '0',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'flex-end',
-      padding: '0 20px',
-      pointerEvents: 'none',
-      zIndex: 1001,
-    }}>
+    <div 
+      className="safe-area-bottom safe-area-left safe-area-right"
+      style={{
+        position: 'absolute',
+        bottom: '10px',
+        left: '0',
+        right: '0',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+        padding: '0 20px',
+        pointerEvents: 'none',
+        zIndex: 1001,
+      }}>
       {/* Movement Instructions */}
       <div style={{
         backgroundColor: 'rgba(0, 0, 0, 0.7)',

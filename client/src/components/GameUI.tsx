@@ -10,14 +10,16 @@ export default function GameUI() {
   const pumpkinCounts = getTotalPumpkinsByStage();
 
   return (
-    <div style={{
-      position: 'absolute',
-      top: isMobile ? '10px' : '20px',
-      left: isMobile ? '10px' : '20px',
-      right: isMobile ? '10px' : '20px',
-      pointerEvents: 'none',
-      zIndex: 1000,
-    }}>
+    <div 
+      className={isMobile ? "safe-area-top safe-area-left safe-area-right" : ""}
+      style={{
+        position: 'absolute',
+        top: isMobile ? '10px' : '20px',
+        left: isMobile ? '10px' : '20px',
+        right: isMobile ? '10px' : '20px',
+        pointerEvents: 'none',
+        zIndex: 1000,
+      }}>
       {/* Game Stats */}
       <div style={{
         background: 'rgba(0, 0, 0, 0.8)',

@@ -14,11 +14,6 @@
     overflow: hidden;
     width: 100vw;
     height: 100vh;
-    /* iPhone safe area support */
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
     /* Mobile optimizations */
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -27,6 +22,23 @@
     -ms-user-select: none;
     user-select: none;
     touch-action: manipulation;
+  }
+  
+  /* iPhone safe area support for specific elements */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
   }
 }
 

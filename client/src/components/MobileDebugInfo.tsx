@@ -29,19 +29,21 @@ export default function MobileDebugInfo() {
   if (process.env.NODE_ENV !== 'development') return null;
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 10,
-      left: 10,
-      background: 'rgba(0,0,0,0.8)',
-      color: 'white',
-      padding: '10px',
-      borderRadius: '5px',
-      fontSize: '12px',
-      fontFamily: 'monospace',
-      zIndex: 9999,
-      maxWidth: '300px'
-    }}>
+    <div 
+      className="safe-area-top safe-area-left"
+      style={{
+        position: 'fixed',
+        top: 10,
+        left: 10,
+        background: 'rgba(0,0,0,0.8)',
+        color: 'white',
+        padding: '10px',
+        borderRadius: '5px',
+        fontSize: '12px',
+        fontFamily: 'monospace',
+        zIndex: 9999,
+        maxWidth: '300px'
+      }}>
       <div>isMobile: {isMobile ? 'true' : 'false'}</div>
       <div>Screen: {window.innerWidth}x{window.innerHeight}</div>
       <div>DPR: {debugInfo.devicePixelRatio}</div>
