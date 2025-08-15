@@ -8,7 +8,7 @@ Preferred communication style: Simple, everyday language.
 iOS App Configuration: 
 - Bundle ID: com.huntergames.pumpkinpatch
 - App Store Connect Integration: "Apple Connect App Mgr"
-- Version: 3.3.0, Build: 24
+- Version: 3.4.0, Build: 25
 - Deployment Method: Capacitor iOS (native app)
 - CI/CD Pipeline: Codemagic with automated build and TestFlight submission
 - Privacy Compliance: App Tracking Transparency (ATT) framework implemented
