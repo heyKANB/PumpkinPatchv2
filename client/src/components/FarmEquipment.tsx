@@ -101,14 +101,33 @@ export default function FarmEquipment({ position, onInteract, durability, type }
 
   return (
     <group position={position}>
+      {/* Large invisible collision mesh for easy clicking */}
       <mesh
-        ref={meshRef}
-        onClick={onInteract}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
+        position={[0, 1, 0]}
+        visible={false}
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log('Equipment clicked:', type);
+          onInteract();
+        }}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setHovered(true);
+          document.body.style.cursor = 'pointer';
+        }}
+        onPointerOut={(e) => {
+          e.stopPropagation();
+          setHovered(false);
+          document.body.style.cursor = 'auto';
+        }}
       >
-        {getEquipmentGeometry()}
+        <boxGeometry args={[3, 3, 3]} />
       </mesh>
+      
+      {/* Visual equipment mesh */}
+      <group ref={meshRef}>
+        {getEquipmentGeometry()}
+      </group>
       
       {/* Durability indicator */}
       {(hovered || durability < 50) && (

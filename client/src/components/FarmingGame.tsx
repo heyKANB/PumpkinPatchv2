@@ -58,6 +58,7 @@ export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMov
 
   // Handle equipment interaction
   const handleEquipmentInteract = (equipmentItem: any) => {
+    console.log('Equipment interaction triggered for:', equipmentItem);
     selectEquipment(equipmentItem);
     setMaintenanceGameActive(true);
   };
@@ -103,6 +104,20 @@ export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMov
           onComplete={handleMaintenanceComplete}
           onClose={handleMaintenanceClose}
         />
+      )}
+      
+      {/* Debug info */}
+      {selectedEquipment && (
+        <group position={[0, 5, 0]}>
+          <Text
+            fontSize={0.5}
+            color="yellow"
+            anchorX="center"
+            anchorY="middle"
+          >
+            Selected: {selectedEquipment.type} ({selectedEquipment.durability}%)
+          </Text>
+        </group>
       )}
     </>
   );
