@@ -101,10 +101,13 @@ export default function FarmEquipment({ position, onInteract, durability, type }
 
   return (
     <group position={position}>
-      {/* Large invisible collision mesh for easy clicking */}
+      {/* Large visible collision mesh for debugging */}
       <mesh
         position={[0, 1, 0]}
-        visible={false}
+        visible={true}
+        material-transparent={true}
+        material-opacity={0.2}
+        material-color="red"
         onClick={(e) => {
           e.stopPropagation();
           console.log('Equipment clicked:', type);
@@ -122,6 +125,7 @@ export default function FarmEquipment({ position, onInteract, durability, type }
         }}
       >
         <boxGeometry args={[3, 3, 3]} />
+        <meshStandardMaterial transparent opacity={0.2} color="red" />
       </mesh>
       
       {/* Visual equipment mesh */}
@@ -129,28 +133,15 @@ export default function FarmEquipment({ position, onInteract, durability, type }
         {getEquipmentGeometry()}
       </group>
       
-      {/* Durability indicator */}
+      {/* Durability indicator - simplified without Text for now */}
       {(hovered || durability < 50) && (
         <group position={[0, 2, 0]}>
-          <Text
-            fontSize={0.3}
-            color={durability < 30 ? '#F44336' : durability < 70 ? '#FF9800' : '#4CAF50'}
-            anchorX="center"
-            anchorY="middle"
-          >
-            {durability}% Condition
-          </Text>
-          {durability < 30 && (
-            <Text
-              fontSize={0.2}
-              color="#F44336"
-              anchorX="center"
-              anchorY="middle"
-              position={[0, -0.4, 0]}
-            >
-              Needs Repair!
-            </Text>
-          )}
+          <mesh>
+            <boxGeometry args={[2, 0.5, 0.1]} />
+            <meshStandardMaterial 
+              color={durability < 30 ? '#F44336' : durability < 70 ? '#FF9800' : '#4CAF50'} 
+            />
+          </mesh>
         </group>
       )}
     </group>

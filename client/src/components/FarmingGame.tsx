@@ -86,15 +86,23 @@ export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMov
       <TouchHandler onTouchMove={onTouchMove} />
       
       {/* Farm Equipment */}
-      {equipment.map((item) => (
-        <FarmEquipment
-          key={item.id}
-          position={item.position}
-          durability={item.durability}
-          type={item.type}
-          onInteract={() => handleEquipmentInteract(item)}
-        />
-      ))}
+      {equipment.map((item) => {
+        console.log('Rendering equipment:', item.type, 'at position', item.position);
+        return (
+          <FarmEquipment
+            key={item.id}
+            position={item.position}
+            durability={item.durability}
+            type={item.type}
+            onInteract={() => handleEquipmentInteract(item)}
+          />
+        );
+      })}
+      
+      {/* Log equipment count to console */}
+      {console.log('Total equipment count:', equipment.length)}
+      
+      {/* Debug info for equipment count - using console instead of Text */}
       
       {/* Maintenance Mini-Game */}
       {maintenanceGameActive && selectedEquipment && (
@@ -106,19 +114,8 @@ export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMov
         />
       )}
       
-      {/* Debug info */}
-      {selectedEquipment && (
-        <group position={[0, 5, 0]}>
-          <Text
-            fontSize={0.5}
-            color="yellow"
-            anchorX="center"
-            anchorY="middle"
-          >
-            Selected: {selectedEquipment.type} ({selectedEquipment.durability}%)
-          </Text>
-        </group>
-      )}
+      {/* Debug info - using console instead of Text */}
+      {selectedEquipment && console.log('Selected equipment:', selectedEquipment)}
     </>
   );
 }
