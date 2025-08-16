@@ -1,13 +1,16 @@
 import { useFarm } from "../lib/stores/useFarm";
 import { useAudio } from "../lib/stores/useAudio";
+import { useEquipment } from "../lib/stores/useEquipment";
 import { useIsMobile } from "../hooks/use-is-mobile";
 
 export default function GameUI() {
   const { playerInventory, getTotalPumpkinsByStage } = useFarm();
   const { isMuted, toggleMute } = useAudio();
+  const { equipment } = useEquipment();
   const isMobile = useIsMobile();
 
   const pumpkinCounts = getTotalPumpkinsByStage();
+  const criticalEquipment = equipment.filter(item => item.durability < 30).length;
 
   return (
     <div 
@@ -48,6 +51,25 @@ export default function GameUI() {
             <div><span style={{ color: '#32CD32' }}>●</span> Sprouts: {pumpkinCounts.sprout}</div>
             <div><span style={{ color: '#228B22' }}>●</span> Growing: {pumpkinCounts.growing}</div>
             <div><span style={{ color: '#FF8C00' }}>●</span> Mature: {pumpkinCounts.mature}</div>
+          </div>
+        )}
+        
+        {/* Equipment Status - Mobile/Desktop */}
+        {criticalEquipment > 0 && (
+          <div style={{
+            marginTop: '10px',
+            padding: '8px',
+            backgroundColor: 'rgba(244, 67, 54, 0.2)',
+            borderRadius: '5px',
+            border: '1px solid #F44336',
+            fontSize: '12px'
+          }}>
+            <div style={{ color: '#F44336', fontWeight: 'bold' }}>
+              ⚠️ {criticalEquipment} Equipment needs repair!
+            </div>
+            <div style={{ color: '#ccc', marginTop: '4px' }}>
+              Click on equipment to start maintenance
+            </div>
           </div>
         )}
       </div>

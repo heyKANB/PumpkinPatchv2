@@ -7,6 +7,7 @@ import ResponsiveCanvas from "./components/ResponsiveCanvas";
 import GameUI from "./components/GameUI";
 import MobileControls from "./components/MobileControls";
 import MobileDebugInfo from "./components/MobileDebugInfo";
+import EquipmentStatus from "./components/EquipmentStatus";
 import { useIsMobile } from "./hooks/use-is-mobile";
 import { useDeviceInfo } from "./hooks/use-device-info";
 
@@ -84,6 +85,7 @@ function App() {
           
           {/* Game UI overlay - rendered outside Canvas */}
           <GameUI />
+          <EquipmentStatus />
           
           {/* Mobile Controls - only shown on mobile */}
           {isMobile && (
