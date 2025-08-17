@@ -2,8 +2,14 @@ import { useState, useEffect, useCallback } from 'react';
 import { useIsMobile } from '../hooks/use-is-mobile';
 
 interface MaintenanceMiniGameProps {
-  equipmentType: 'tractor' | 'watering_can' | 'hoe';
-  currentDurability: number;
+  equipment: {
+    id: string;
+    type: 'tractor' | 'watering_can' | 'hoe';
+    durability: number;
+    position: [number, number, number];
+    lastMaintained: number;
+    repairCost: number;
+  };
   onComplete: (newDurability: number) => void;
   onClose: () => void;
 }
@@ -17,11 +23,13 @@ interface RepairTask {
 }
 
 export default function MaintenanceMiniGame({ 
-  equipmentType, 
-  currentDurability, 
+  equipment, 
   onComplete, 
   onClose 
 }: MaintenanceMiniGameProps) {
+  const equipmentType = equipment?.type || 'equipment';
+  const currentDurability = equipment?.durability || 0;
+  const displayName = equipmentType.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
   const [tasks, setTasks] = useState<RepairTask[]>([]);
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const [gameProgress, setGameProgress] = useState(0);
