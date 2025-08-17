@@ -280,9 +280,11 @@ export default function MatchingGame({ onProgress, onComplete, equipmentType }: 
   // Update progress
   useEffect(() => {
     const progress = Math.min((score / targetScore) * 100, 100);
+    console.log(`[MatchingGame] Progress update: ${progress}% (score: ${score}/${targetScore})`);
     onProgress(progress);
     
     if (score >= targetScore) {
+      console.log(`[MatchingGame] Target score reached! Completing matching game...`);
       setTimeout(() => {
         onComplete();
       }, 1000);

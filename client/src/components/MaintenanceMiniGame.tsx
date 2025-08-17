@@ -393,6 +393,7 @@ export default function MaintenanceMiniGame({
               <MatchingGame
                 equipmentType={equipmentType}
                 onProgress={(progress) => {
+                  console.log(`[MaintenanceMiniGame] Matching game progress: ${progress}%`);
                   setTasks(prev => prev.map((task, index) => 
                     index === currentTaskIndex 
                       ? { ...task, progress }
@@ -400,11 +401,8 @@ export default function MaintenanceMiniGame({
                   ));
                 }}
                 onComplete={() => {
-                  setTasks(prev => prev.map((task, index) => 
-                    index === currentTaskIndex 
-                      ? { ...task, progress: 100, completed: true }
-                      : task
-                  ));
+                  console.log(`[MaintenanceMiniGame] Matching game completed! Completing current task...`);
+                  completeCurrentTask();
                 }}
               />
             )}

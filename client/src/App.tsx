@@ -29,10 +29,10 @@ function App() {
   const [mobileInteract, setMobileInteract] = useState(false);
   const [playerPosition, setPlayerPosition] = useState<[number, number, number]>([0, 0, 0]);
   const [shedMenuOpen, setShedMenuOpen] = useState(false);
-  const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
+  // Use equipment store state instead of local state
   const [maintenanceGameActive, setMaintenanceGameActive] = useState(false);
   const { setHitSound, setSuccessSound } = useAudio();
-  const { selectEquipment, repairEquipment } = useEquipment();
+  const { equipment, selectedEquipment: storeSelectedEquipment, selectEquipment, repairEquipment } = useEquipment();
   const isMobile = useIsMobile();
   const deviceInfo = useDeviceInfo();
 
@@ -77,26 +77,25 @@ function App() {
   };
 
   const handleEquipmentSelect = (equipmentItem: any) => {
-    setSelectedEquipment(equipmentItem);
+    console.log(`[App] Equipment selected:`, equipmentItem);
     selectEquipment(equipmentItem);
     setShedMenuOpen(false);
     setMaintenanceGameActive(true);
   };
 
   const handleMaintenanceComplete = (newDurability: number) => {
-    if (selectedEquipment) {
-      console.log(`[App] Maintenance completed for ${selectedEquipment.type} (${selectedEquipment.id}): ${selectedEquipment.durability}% -> ${newDurability}%`);
-      repairEquipment(selectedEquipment.id, newDurability);
+    if (storeSelectedEquipment) {
+      console.log(`[App] Maintenance completed for ${storeSelectedEquipment.type} (${storeSelectedEquipment.id}): ${storeSelectedEquipment.durability}% -> ${newDurability}%`);
+      repairEquipment(storeSelectedEquipment.id, newDurability);
     } else {
       console.log('[App] No selected equipment for maintenance completion');
     }
     setMaintenanceGameActive(false);
-    setSelectedEquipment(null);
   };
 
   const handleMaintenanceClose = () => {
     setMaintenanceGameActive(false);
-    setSelectedEquipment(null);
+    selectEquipment(null);
   };
 
   const handleShedMenuClose = () => {
@@ -146,9 +145,9 @@ function App() {
           )}
           
           {/* Maintenance Mini-Game */}
-          {maintenanceGameActive && selectedEquipment && (
+          {maintenanceGameActive && storeSelectedEquipment && (
             <MaintenanceMiniGame
-              equipment={selectedEquipment}
+              equipment={storeSelectedEquipment}
               onComplete={handleMaintenanceComplete}
               onClose={handleMaintenanceClose}
             />
