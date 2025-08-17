@@ -118,10 +118,11 @@ export default function MaintenanceMiniGame({
       // All tasks completed
       const repairAmount = Math.min(40, 100 - currentDurability);
       const newDurability = Math.min(100, currentDurability + repairAmount);
+      console.log(`Equipment repair completed! ${equipmentType} - Old: ${currentDurability}%, New: ${newDurability}%`);
       setGameProgress(100);
       setTimeout(() => onComplete(newDurability), 1000);
     }
-  }, [currentTaskIndex, tasks.length, currentDurability, onComplete]);
+  }, [currentTaskIndex, tasks.length, currentDurability, onComplete, equipmentType]);
 
   // Handle different task types
   const handleTap = () => {

@@ -71,6 +71,7 @@ export default function FarmingGame({
   // Handle shed entry
   const handleShedEntry = () => {
     console.log('Player entered equipment shed');
+    setShedMenuOpen(true);
     if (onShedEntry) onShedEntry();
   };
 
@@ -85,6 +86,7 @@ export default function FarmingGame({
   // Handle maintenance completion
   const handleMaintenanceComplete = (newDurability: number) => {
     if (selectedEquipment) {
+      console.log(`Calling repairEquipment with ID: ${selectedEquipment.id}, newDurability: ${newDurability}`);
       repairEquipment(selectedEquipment.id, newDurability);
     }
   };
@@ -123,14 +125,20 @@ export default function FarmingGame({
       {/* Maintenance Mini-Game */}
       {maintenanceGameActive && selectedEquipment && (
         <MaintenanceMiniGame
-          equipmentType={selectedEquipment.type}
-          currentDurability={selectedEquipment.durability}
+          equipment={selectedEquipment}
           onComplete={handleMaintenanceComplete}
           onClose={handleMaintenanceClose}
         />
       )}
       
 
+      {/* Equipment Shed Menu */}
+      {shedMenuOpen && (
+        <EquipmentShedMenu
+          onClose={handleShedMenuClose}
+          onSelectEquipment={handleEquipmentSelect}
+        />
+      )}
       
       {/* Debug logging */}
       {selectedEquipment && console.log('Selected equipment:', selectedEquipment)}
