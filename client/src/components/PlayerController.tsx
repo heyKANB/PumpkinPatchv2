@@ -9,9 +9,10 @@ import * as THREE from "three";
 interface PlayerControllerProps {
   mobileMovement?: { x: number; z: number };
   mobileInteract?: boolean;
+  onPositionChange?: (position: [number, number, number]) => void;
 }
 
-export default function PlayerController({ mobileMovement, mobileInteract }: PlayerControllerProps) {
+export default function PlayerController({ mobileMovement, mobileInteract, onPositionChange }: PlayerControllerProps) {
   const playerRef = useRef<THREE.Mesh>(null);
   const [, getKeys] = useKeyboardControls();
   const { plantPumpkin, playerInventory } = useFarm();
@@ -69,6 +70,15 @@ export default function PlayerController({ mobileMovement, mobileInteract }: Pla
     const bounds = 9;
     playerRef.current.position.x = Math.max(-bounds, Math.min(bounds, playerRef.current.position.x));
     playerRef.current.position.z = Math.max(-bounds, Math.min(bounds, playerRef.current.position.z));
+    
+    // Report position change to parent
+    if (onPositionChange) {
+      onPositionChange([
+        playerRef.current.position.x,
+        playerRef.current.position.y,
+        playerRef.current.position.z
+      ]);
+    }
     
     // Planting interaction - keyboard or mobile
     if ((interact || mobileInteract) && playerInventory.seeds > 0) {

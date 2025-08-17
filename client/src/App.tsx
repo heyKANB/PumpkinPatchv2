@@ -85,7 +85,6 @@ function App() {
           
           {/* Game UI overlay - rendered outside Canvas */}
           <GameUI />
-          <EquipmentStatus />
           
           {/* Mobile Controls - only shown on mobile */}
           {isMobile && (

@@ -5,17 +5,18 @@ import TouchHandler from "./TouchHandler";
 import { useFarm } from "../lib/stores/useFarm";
 import { useEquipment } from "../lib/stores/useEquipment";
 import { AppTrackingManager, GameTrackingEvents } from "../lib/tracking";
-import FarmEquipment from "./FarmEquipment";
+import EquipmentShed from "./EquipmentShed";
+import EquipmentShedMenu from "./EquipmentShedMenu";
 import MaintenanceMiniGame from "./MaintenanceMiniGame";
-import EquipmentStatus from "./EquipmentStatus";
 
 interface FarmingGameProps {
   mobileMovement?: { x: number; z: number };
   mobileInteract?: boolean;
   onTouchMove?: (deltaX: number, deltaY: number) => void;
+  playerPosition?: [number, number, number];
 }
 
-export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMove }: FarmingGameProps) {
+export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMove, playerPosition = [0, 0, 0] }: FarmingGameProps) {
   const { initializeFarm, updateGrowth } = useFarm();
   const { 
     equipment, 
@@ -28,6 +29,8 @@ export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMov
     setMaintenanceGameActive 
   } = useEquipment();
   const [gameStarted, setGameStarted] = useState(false);
+  const [shedMenuOpen, setShedMenuOpen] = useState(false);
+  const [currentPlayerPosition, setCurrentPlayerPosition] = useState<[number, number, number]>([0, 0, 0]);
 
   // Initialize the farm and equipment when the game starts
   useEffect(() => {
@@ -56,10 +59,17 @@ export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMov
 
   if (!gameStarted) return null;
 
-  // Handle equipment interaction
-  const handleEquipmentInteract = (equipmentItem: any) => {
-    console.log('Equipment interaction triggered for:', equipmentItem);
+  // Handle shed entry
+  const handleShedEntry = () => {
+    console.log('Player entered equipment shed');
+    setShedMenuOpen(true);
+  };
+
+  // Handle equipment selection from shed menu
+  const handleEquipmentSelect = (equipmentItem: any) => {
+    console.log('Equipment selected from shed:', equipmentItem);
     selectEquipment(equipmentItem);
+    setShedMenuOpen(false);
     setMaintenanceGameActive(true);
   };
 
@@ -76,33 +86,27 @@ export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMov
     setMaintenanceGameActive(false);
   };
 
+  // Handle shed menu close
+  const handleShedMenuClose = () => {
+    setShedMenuOpen(false);
+  };
+
   return (
     <>
       <Farm />
       <PlayerController 
         mobileMovement={mobileMovement}
         mobileInteract={mobileInteract}
+        onPositionChange={setCurrentPlayerPosition}
       />
       <TouchHandler onTouchMove={onTouchMove} />
       
-      {/* Farm Equipment */}
-      {equipment.map((item) => {
-        console.log('Rendering equipment:', item.type, 'at position', item.position);
-        return (
-          <FarmEquipment
-            key={item.id}
-            position={item.position}
-            durability={item.durability}
-            type={item.type}
-            onInteract={() => handleEquipmentInteract(item)}
-          />
-        );
-      })}
-      
-      {/* Log equipment count to console */}
-      {console.log('Total equipment count:', equipment.length)}
-      
-      {/* Debug info for equipment count - using console instead of Text */}
+      {/* Equipment Shed in lower left corner */}
+      <EquipmentShed 
+        position={[-8, 0, 8]} 
+        onEnter={handleShedEntry}
+        playerPosition={currentPlayerPosition}
+      />
       
       {/* Maintenance Mini-Game */}
       {maintenanceGameActive && selectedEquipment && (
@@ -114,7 +118,15 @@ export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMov
         />
       )}
       
-      {/* Debug info - using console instead of Text */}
+      {/* Equipment Shed Menu */}
+      {shedMenuOpen && (
+        <EquipmentShedMenu
+          onClose={handleShedMenuClose}
+          onSelectEquipment={handleEquipmentSelect}
+        />
+      )}
+      
+      {/* Debug logging */}
       {selectedEquipment && console.log('Selected equipment:', selectedEquipment)}
     </>
   );
