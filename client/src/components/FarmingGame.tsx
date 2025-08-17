@@ -122,23 +122,7 @@ export default function FarmingGame({
         playerPosition={currentPlayerPosition}
       />
       
-      {/* Maintenance Mini-Game */}
-      {maintenanceGameActive && selectedEquipment && (
-        <MaintenanceMiniGame
-          equipment={selectedEquipment}
-          onComplete={handleMaintenanceComplete}
-          onClose={handleMaintenanceClose}
-        />
-      )}
-      
 
-      {/* Equipment Shed Menu */}
-      {shedMenuOpen && (
-        <EquipmentShedMenu
-          onClose={handleShedMenuClose}
-          onSelectEquipment={handleEquipmentSelect}
-        />
-      )}
       
       {/* Debug logging */}
       {selectedEquipment && console.log('Selected equipment:', selectedEquipment)}
