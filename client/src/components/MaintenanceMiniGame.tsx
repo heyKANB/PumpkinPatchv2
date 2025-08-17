@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useIsMobile } from '../hooks/use-is-mobile';
+import MatchingGame from './MatchingGame';
 
 interface MaintenanceMiniGameProps {
   equipment: {
@@ -16,7 +17,7 @@ interface MaintenanceMiniGameProps {
 
 interface RepairTask {
   id: string;
-  type: 'tap' | 'hold' | 'sequence' | 'timing';
+  type: 'tap' | 'hold' | 'sequence' | 'timing' | 'matching';
   progress: number;
   completed: boolean;
   description: string;
@@ -66,18 +67,11 @@ export default function MaintenanceMiniGame({
           return [
             ...baseTasks,
             {
-              id: 'engine',
-              type: 'sequence',
+              id: 'matching',
+              type: 'matching',
               progress: 0,
               completed: false,
-              description: 'Start engine (follow sequence: 1-2-3-1)'
-            },
-            {
-              id: 'timing',
-              type: 'timing',
-              progress: 0,
-              completed: false,
-              description: 'Time the engine idle (tap when green)'
+              description: 'Match engine parts (match-3 game)'
             }
           ];
         case 'watering_can':
@@ -95,11 +89,11 @@ export default function MaintenanceMiniGame({
           return [
             ...baseTasks,
             {
-              id: 'sharpen',
-              type: 'sequence',
+              id: 'matching',
+              type: 'matching',
               progress: 0,
               completed: false,
-              description: 'Sharpen blade (sequence: 1-2-3-1)'
+              description: 'Sort tool components (match-3 game)'
             }
           ];
         default:
@@ -241,9 +235,11 @@ export default function MaintenanceMiniGame({
         backgroundColor: 'white',
         borderRadius: '15px',
         padding: isMobile ? '20px' : '30px',
-        maxWidth: isMobile ? '90vw' : '500px',
+        maxWidth: currentTask?.type === 'matching' ? (isMobile ? '95vw' : '600px') : (isMobile ? '90vw' : '500px'),
         width: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        maxHeight: '90vh',
+        overflowY: 'auto'
       }}>
         <h2 style={{ margin: '0 0 20px 0', color: '#333' }}>
           🔧 Repair {equipmentType.replace('_', ' ').toUpperCase()}
@@ -390,6 +386,26 @@ export default function MaintenanceMiniGame({
                   TAP NOW!
                 </button>
               </div>
+            )}
+
+            {currentTask.type === 'matching' && (
+              <MatchingGame
+                equipmentType={equipmentType}
+                onProgress={(progress) => {
+                  setTasks(prev => prev.map((task, index) => 
+                    index === currentTaskIndex 
+                      ? { ...task, progress }
+                      : task
+                  ));
+                }}
+                onComplete={() => {
+                  setTasks(prev => prev.map((task, index) => 
+                    index === currentTaskIndex 
+                      ? { ...task, progress: 100, completed: true }
+                      : task
+                  ));
+                }}
+              />
             )}
           </div>
         )}
