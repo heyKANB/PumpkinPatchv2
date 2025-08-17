@@ -85,7 +85,10 @@ function App() {
 
   const handleMaintenanceComplete = (newDurability: number) => {
     if (selectedEquipment) {
+      console.log(`[App] Maintenance completed for ${selectedEquipment.type} (${selectedEquipment.id}): ${selectedEquipment.durability}% -> ${newDurability}%`);
       repairEquipment(selectedEquipment.id, newDurability);
+    } else {
+      console.log('[App] No selected equipment for maintenance completion');
     }
     setMaintenanceGameActive(false);
     setSelectedEquipment(null);

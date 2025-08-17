@@ -63,15 +63,24 @@ export const useEquipment = create<EquipmentStore>((set, get) => ({
   },
 
   repairEquipment: (equipmentId, newDurability) => {
-    set(state => ({
-      equipment: state.equipment.map(item =>
-        item.id === equipmentId
-          ? { ...item, durability: newDurability, lastMaintained: Date.now() }
-          : item
-      ),
-      selectedEquipment: null,
-      maintenanceGameActive: false
-    }));
+    console.log(`[Equipment Store] Repairing equipment: ${equipmentId}, new durability: ${newDurability}`);
+    set(state => {
+      const updatedEquipment = state.equipment.map(item => {
+        if (item.id === equipmentId) {
+          console.log(`[Equipment Store] Found equipment ${equipmentId}: ${item.durability}% -> ${newDurability}%`);
+          return { ...item, durability: newDurability, lastMaintained: Date.now() };
+        }
+        return item;
+      });
+      
+      console.log('[Equipment Store] Updated equipment array:', updatedEquipment);
+      
+      return {
+        equipment: updatedEquipment,
+        selectedEquipment: null,
+        maintenanceGameActive: false
+      };
+    });
   },
 
   degradeEquipment: () => {
