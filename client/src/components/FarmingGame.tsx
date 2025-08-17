@@ -14,9 +14,18 @@ interface FarmingGameProps {
   mobileInteract?: boolean;
   onTouchMove?: (deltaX: number, deltaY: number) => void;
   playerPosition?: [number, number, number];
+  onPlayerPositionChange?: (position: [number, number, number]) => void;
+  onShedEntry?: () => void;
 }
 
-export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMove, playerPosition = [0, 0, 0] }: FarmingGameProps) {
+export default function FarmingGame({ 
+  mobileMovement, 
+  mobileInteract, 
+  onTouchMove, 
+  playerPosition = [0, 0, 0], 
+  onPlayerPositionChange, 
+  onShedEntry 
+}: FarmingGameProps) {
   const { initializeFarm, updateGrowth } = useFarm();
   const { 
     equipment, 
@@ -62,7 +71,7 @@ export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMov
   // Handle shed entry
   const handleShedEntry = () => {
     console.log('Player entered equipment shed');
-    setShedMenuOpen(true);
+    if (onShedEntry) onShedEntry();
   };
 
   // Handle equipment selection from shed menu
@@ -97,7 +106,10 @@ export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMov
       <PlayerController 
         mobileMovement={mobileMovement}
         mobileInteract={mobileInteract}
-        onPositionChange={setCurrentPlayerPosition}
+        onPositionChange={(pos) => {
+          setCurrentPlayerPosition(pos);
+          if (onPlayerPositionChange) onPlayerPositionChange(pos);
+        }}
       />
       <TouchHandler onTouchMove={onTouchMove} />
       
@@ -118,13 +130,7 @@ export default function FarmingGame({ mobileMovement, mobileInteract, onTouchMov
         />
       )}
       
-      {/* Equipment Shed Menu */}
-      {shedMenuOpen && (
-        <EquipmentShedMenu
-          onClose={handleShedMenuClose}
-          onSelectEquipment={handleEquipmentSelect}
-        />
-      )}
+
       
       {/* Debug logging */}
       {selectedEquipment && console.log('Selected equipment:', selectedEquipment)}

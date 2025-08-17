@@ -7,9 +7,19 @@ interface ResponsiveCanvasProps {
   mobileMovement: { x: number; z: number };
   mobileInteract: boolean;
   onTouchMove: (deltaX: number, deltaY: number) => void;
+  playerPosition: [number, number, number];
+  onPlayerPositionChange: (position: [number, number, number]) => void;
+  onShedEntry: () => void;
 }
 
-export default function ResponsiveCanvas({ mobileMovement, mobileInteract, onTouchMove }: ResponsiveCanvasProps) {
+export default function ResponsiveCanvas({ 
+  mobileMovement, 
+  mobileInteract, 
+  onTouchMove, 
+  playerPosition, 
+  onPlayerPositionChange, 
+  onShedEntry 
+}: ResponsiveCanvasProps) {
   const deviceInfo = useDeviceInfo();
   
   // Calculate optimal camera settings based on device
@@ -93,6 +103,9 @@ export default function ResponsiveCanvas({ mobileMovement, mobileInteract, onTou
           mobileMovement={mobileMovement}
           mobileInteract={mobileInteract}
           onTouchMove={onTouchMove}
+          playerPosition={playerPosition}
+          onPlayerPositionChange={onPlayerPositionChange}
+          onShedEntry={onShedEntry}
         />
       </Suspense>
     </Canvas>
