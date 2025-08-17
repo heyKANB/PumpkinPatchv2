@@ -117,7 +117,7 @@ export default function FarmingGame({
       
       {/* Equipment Shed in lower left corner */}
       <EquipmentShed 
-        position={[-8, 0, 8]} 
+        position={[-8, 0, -8]} 
         onEnter={handleShedEntry}
         playerPosition={currentPlayerPosition}
       />
