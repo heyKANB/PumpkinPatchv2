@@ -4,7 +4,7 @@ const config: CapacitorConfig = {
   appId: 'com.huntergames.pumpkinpatch',
   appName: 'Pumpkin Farm 3D',
   webDir: 'dist/public',
-  bundledWebRuntime: false,
+
   server: {
     androidScheme: 'https'
   },
