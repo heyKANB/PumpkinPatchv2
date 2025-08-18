@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.huntergames.pumpkinpatch",
-      "buildNumber": "27",
+      "buildNumber": "30",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses camera for AR features (future feature)",
         "NSMicrophoneUsageDescription": "This app uses microphone for enhanced gameplay audio",
