@@ -8,6 +8,7 @@ import { AppTrackingManager, GameTrackingEvents } from "../lib/tracking";
 import EquipmentShed from "./EquipmentShed";
 import EquipmentShedMenu from "./EquipmentShedMenu";
 import MaintenanceMiniGame from "./MaintenanceMiniGame";
+import FieldGate from "./FieldGate";
 
 interface FarmingGameProps {
   mobileMovement?: { x: number; z: number };
@@ -16,6 +17,7 @@ interface FarmingGameProps {
   playerPosition?: [number, number, number];
   onPlayerPositionChange?: (position: [number, number, number]) => void;
   onShedEntry?: () => void;
+  onGateEntry?: () => void;
 }
 
 export default function FarmingGame({ 
@@ -24,7 +26,8 @@ export default function FarmingGame({
   onTouchMove, 
   playerPosition = [0, 0, 0], 
   onPlayerPositionChange, 
-  onShedEntry 
+  onShedEntry,
+  onGateEntry
 }: FarmingGameProps) {
   const { initializeFarm, updateGrowth } = useFarm();
   const { 
@@ -102,6 +105,13 @@ export default function FarmingGame({
     setShedMenuOpen(false);
   };
 
+  // Gate entry handler
+  const handleGateEntry = () => {
+    if (onGateEntry) {
+      onGateEntry();
+    }
+  };
+
   return (
     <>
       <Farm />
@@ -115,10 +125,17 @@ export default function FarmingGame({
       />
       <TouchHandler onTouchMove={onTouchMove} />
       
-      {/* Equipment Shed in lower left corner */}
+      {/* Equipment Shed in top left corner */}
       <EquipmentShed 
         position={[-8, 0, -8]} 
         onEnter={handleShedEntry}
+        playerPosition={currentPlayerPosition}
+      />
+
+      {/* Field Gate in back middle */}
+      <FieldGate
+        position={[0, 0, -10]}
+        onEnter={handleGateEntry}
         playerPosition={currentPlayerPosition}
       />
       

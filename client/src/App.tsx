@@ -9,6 +9,7 @@ import MobileControls from "./components/MobileControls";
 import MobileDebugInfo from "./components/MobileDebugInfo";
 import EquipmentShedMenu from "./components/EquipmentShedMenu";
 import MaintenanceMiniGame from "./components/MaintenanceMiniGame";
+import LocationMenu from "./components/LocationMenu";
 import { useEquipment } from "./lib/stores/useEquipment";
 import { useIsMobile } from "./hooks/use-is-mobile";
 import { useDeviceInfo } from "./hooks/use-device-info";
@@ -29,6 +30,7 @@ function App() {
   const [mobileInteract, setMobileInteract] = useState(false);
   const [playerPosition, setPlayerPosition] = useState<[number, number, number]>([0, 0, 0]);
   const [shedMenuOpen, setShedMenuOpen] = useState(false);
+  const [locationMenuOpen, setLocationMenuOpen] = useState(false);
   // Use equipment store state instead of local state
   const [maintenanceGameActive, setMaintenanceGameActive] = useState(false);
   const { setHitSound, setSuccessSound } = useAudio();
@@ -102,6 +104,26 @@ function App() {
     setShedMenuOpen(false);
   };
 
+  // Gate handlers
+  const handleGateEntry = () => {
+    setLocationMenuOpen(true);
+  };
+
+  const handleLocationSelect = (location: string) => {
+    console.log(`Location selected: ${location}`);
+    if (location === 'field') {
+      setLocationMenuOpen(false);
+      // Player is already in the field, just close menu
+    } else if (location === 'marketplace' || location === 'kitchen') {
+      // These are locked for now, do nothing
+      console.log(`${location} is locked for future updates`);
+    }
+  };
+
+  const handleLocationMenuClose = () => {
+    setLocationMenuOpen(false);
+  };
+
   return (
     <div style={{ 
       width: '100vw', 
@@ -121,6 +143,7 @@ function App() {
               playerPosition={playerPosition}
               onPlayerPositionChange={setPlayerPosition}
               onShedEntry={handleShedEntry}
+              onGateEntry={handleGateEntry}
             />
           </KeyboardControls>
           
@@ -152,6 +175,13 @@ function App() {
               onClose={handleMaintenanceClose}
             />
           )}
+
+          {/* Location Menu */}
+          <LocationMenu
+            isOpen={locationMenuOpen}
+            onClose={handleLocationMenuClose}
+            onSelectLocation={handleLocationSelect}
+          />
           
           {/* Debug info for development */}
           <MobileDebugInfo />

@@ -10,6 +10,7 @@ interface ResponsiveCanvasProps {
   playerPosition: [number, number, number];
   onPlayerPositionChange: (position: [number, number, number]) => void;
   onShedEntry: () => void;
+  onGateEntry: () => void;
 }
 
 export default function ResponsiveCanvas({ 
@@ -18,7 +19,8 @@ export default function ResponsiveCanvas({
   onTouchMove, 
   playerPosition, 
   onPlayerPositionChange, 
-  onShedEntry 
+  onShedEntry,
+  onGateEntry
 }: ResponsiveCanvasProps) {
   const deviceInfo = useDeviceInfo();
   
@@ -106,6 +108,7 @@ export default function ResponsiveCanvas({
           playerPosition={playerPosition}
           onPlayerPositionChange={onPlayerPositionChange}
           onShedEntry={onShedEntry}
+          onGateEntry={onGateEntry}
         />
       </Suspense>
     </Canvas>

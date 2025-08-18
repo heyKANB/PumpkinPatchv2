@@ -55,6 +55,8 @@ iOS App Configuration:
 - **Real-time Updates**: 2-second growth intervals for dynamic gameplay
 - **Cross-platform Input**: Supports both keyboard (desktop) and touch controls (mobile)
 - **Touch-and-Drag Movement**: Mobile users can drag anywhere on screen to move the farmer
+- **Equipment Maintenance System**: Interactive shed with proximity detection and repair mini-games
+- **Location Travel System**: Field gate with travel menu for future marketplace and kitchen expansions
 
 # External Dependencies
 
