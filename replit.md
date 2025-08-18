@@ -57,6 +57,7 @@ iOS App Configuration:
 - **Touch-and-Drag Movement**: Mobile users can drag anywhere on screen to move the farmer
 - **Equipment Maintenance System**: Interactive shed with proximity detection and repair mini-games
 - **Location Travel System**: Field gate with travel menu for future marketplace and kitchen expansions
+- **Currency System**: Coin counter display with Zustand state management for future marketplace transactions
 
 # External Dependencies
 

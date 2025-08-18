@@ -10,6 +10,7 @@ import MobileDebugInfo from "./components/MobileDebugInfo";
 import EquipmentShedMenu from "./components/EquipmentShedMenu";
 import MaintenanceMiniGame from "./components/MaintenanceMiniGame";
 import LocationMenu from "./components/LocationMenu";
+import CoinCounter from "./components/CoinCounter";
 import { useEquipment } from "./lib/stores/useEquipment";
 import { useIsMobile } from "./hooks/use-is-mobile";
 import { useDeviceInfo } from "./hooks/use-device-info";
@@ -149,6 +150,9 @@ function App() {
           
           {/* Game UI overlay - rendered outside Canvas */}
           <GameUI />
+          
+          {/* Coin Counter */}
+          <CoinCounter />
           
           {/* Mobile Controls - only shown on mobile */}
           {isMobile && (
