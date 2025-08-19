@@ -32,8 +32,8 @@ export default function SupportPage() {
                 <Globe className="w-5 h-5 mr-3 text-gray-500" />
                 <div>
                   <p className="font-medium">Website</p>
-                  <a href="https://huntergames.com" className="text-blue-600 hover:text-blue-800" target="_blank" rel="noopener noreferrer">
-                    huntergames.com
+                  <a href="https://HunterGames.app" className="text-blue-600 hover:text-blue-800" target="_blank" rel="noopener noreferrer">
+                    HunterGames.app
                   </a>
                 </div>
               </div>
