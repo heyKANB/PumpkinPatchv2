@@ -7,23 +7,35 @@ interface XPNotificationProps {
 }
 
 const XPNotification: React.FC<XPNotificationProps> = ({ gain, onComplete }) => {
-  const [visible, setVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(true);
+  const [shouldRemove, setShouldRemove] = useState(false);
 
   useEffect(() => {
-    // Start fading immediately, then remove after fade completes
-    const fadeTimer = setTimeout(() => {
-      setVisible(false);
-    }, 800); // Show for 0.8 seconds then start fading
+    console.log('[XP Notification] Showing notification for:', gain.activity.name, 'XP:', gain.amount);
     
+    // Start fade out after showing for a short time
+    const fadeTimer = setTimeout(() => {
+      console.log('[XP Notification] Starting fade out for:', gain.activity.name);
+      setIsVisible(false);
+    }, 800);
+    
+    // Remove component after fade completes
     const removeTimer = setTimeout(() => {
+      console.log('[XP Notification] Removing notification for:', gain.activity.name);
+      setShouldRemove(true);
       onComplete();
-    }, 1200); // Remove completely after 1.2 seconds total
+    }, 1300); // Extra time for fade animation
 
     return () => {
       clearTimeout(fadeTimer);
       clearTimeout(removeTimer);
     };
-  }, [onComplete]);
+  }, [onComplete, gain.activity.name, gain.amount]);
+
+  // Don't render if marked for removal
+  if (shouldRemove) {
+    return null;
+  }
 
   const getActivityColor = (type: string) => {
     switch (type) {
@@ -39,8 +51,8 @@ const XPNotification: React.FC<XPNotificationProps> = ({ gain, onComplete }) => 
     <div
       className={`
         flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-lg border backdrop-blur-sm
-        transition-all duration-300 ease-out text-sm md:text-base
-        ${visible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'}
+        transition-all duration-500 ease-out text-sm md:text-base
+        ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'}
         ${getActivityColor(gain.activity.type)}
       `}
     >
@@ -90,7 +102,7 @@ const XPGainNotifications: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-32 md:top-20 right-4 z-50 space-y-2 max-w-xs">
+    <div className="fixed top-20 md:top-24 right-4 z-50 space-y-2 max-w-xs" style={{ pointerEvents: 'none' }}>
       {displayedGains.map((gain, index) => (
         <XPNotification
           key={`${gain.timestamp}-${gain.activity.name}-${index}`}
