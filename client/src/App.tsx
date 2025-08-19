@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useEffect, useState } from "react";
 import { KeyboardControls } from "@react-three/drei";
+import { Route, Router } from "wouter";
 import { useAudio } from "./lib/stores/useAudio";
 import "@fontsource/inter";
 import ResponsiveCanvas from "./components/ResponsiveCanvas";
@@ -12,6 +13,9 @@ import MaintenanceMiniGame from "./components/MaintenanceMiniGame";
 import LocationMenu from "./components/LocationMenu";
 import CoinCounter from "./components/CoinCounter";
 import { useEquipment } from "./lib/stores/useEquipment";
+import SupportPage from "./pages/support";
+import PrivacyPage from "./pages/privacy";
+import TermsPage from "./pages/terms";
 import { useIsMobile } from "./hooks/use-is-mobile";
 import { useDeviceInfo } from "./hooks/use-device-info";
 
@@ -126,14 +130,25 @@ function App() {
   };
 
   return (
-    <div style={{ 
-      width: '100vw', 
-      height: '100vh', 
-      position: 'relative', 
-      overflow: 'hidden',
-      // Use full viewport height on mobile, accounting for browser UI
-      minHeight: isMobile ? '100vh' : 'auto'
-    }}>
+    <Router>
+      <Route path="/support">
+        <SupportPage />
+      </Route>
+      <Route path="/privacy">
+        <PrivacyPage />
+      </Route>
+      <Route path="/terms">
+        <TermsPage />
+      </Route>
+      <Route path="/">
+        <div style={{ 
+          width: '100vw', 
+          height: '100vh', 
+          position: 'relative', 
+          overflow: 'hidden',
+          // Use full viewport height on mobile, accounting for browser UI
+          minHeight: isMobile ? '100vh' : 'auto'
+        }}>
       {showCanvas && (
         <>
           <KeyboardControls map={controls}>
@@ -191,7 +206,9 @@ function App() {
           <MobileDebugInfo />
         </>
       )}
-    </div>
+        </div>
+      </Route>
+    </Router>
   );
 }
 
