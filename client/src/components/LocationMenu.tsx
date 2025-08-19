@@ -16,12 +16,12 @@ export default function LocationMenu({ isOpen, onClose, onSelectLocation }: Loca
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-      <div className="bg-gradient-to-b from-green-800 to-green-900 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl border-4 border-yellow-600">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+      <div className="bg-gradient-to-b from-green-800 to-green-900 rounded-2xl p-4 md:p-8 max-w-md md:max-w-lg w-full shadow-2xl border-4 border-yellow-600 max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold text-yellow-200 flex items-center gap-3">
-            <MapPin className="w-8 h-8" />
+          <h2 className="text-xl md:text-3xl font-bold text-yellow-200 flex items-center gap-3">
+            <MapPin className="w-6 md:w-8 h-6 md:h-8" />
             Travel Menu
           </h2>
           <button
@@ -37,7 +37,7 @@ export default function LocationMenu({ isOpen, onClose, onSelectLocation }: Loca
           {/* Field Option */}
           <button
             onClick={() => handleLocationClick('field')}
-            className="w-full bg-green-700 hover:bg-green-600 text-white p-4 rounded-xl transition-all duration-200 flex items-center gap-4 border-2 border-green-600 hover:border-green-500 shadow-lg hover:shadow-xl transform hover:scale-105"
+            className="w-full bg-green-700 hover:bg-green-600 text-white p-3 md:p-4 rounded-xl transition-all duration-200 flex items-center gap-3 md:gap-4 border-2 border-green-600 hover:border-green-500 shadow-lg hover:shadow-xl transform hover:scale-105"
           >
             <div className="bg-green-600 p-3 rounded-xl">
               <Sprout className="w-8 h-8" />

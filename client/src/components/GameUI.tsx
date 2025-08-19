@@ -2,12 +2,14 @@ import { useFarm } from "../lib/stores/useFarm";
 import { useAudio } from "../lib/stores/useAudio";
 import { useEquipment } from "../lib/stores/useEquipment";
 import { useIsMobile } from "../hooks/use-is-mobile";
+import { useIsTablet } from "../hooks/use-is-tablet";
 
 export default function GameUI() {
   const { playerInventory, getTotalPumpkinsByStage } = useFarm();
   const { isMuted, toggleMute } = useAudio();
   const { equipment } = useEquipment();
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
 
   const pumpkinCounts = getTotalPumpkinsByStage();
   const criticalEquipment = equipment.filter(item => item.durability < 30).length;
@@ -17,8 +19,8 @@ export default function GameUI() {
       className={isMobile ? "safe-area-top safe-area-left safe-area-right" : ""}
       style={{
         position: 'absolute',
-        top: isMobile ? '10px' : '20px',
-        left: isMobile ? '10px' : '20px',
+        top: isTablet ? '80px' : (isMobile ? '10px' : '20px'), // Move down for tablet to avoid XP bar
+        left: isTablet ? '260px' : (isMobile ? '10px' : '20px'), // Move right for tablet to avoid XP bar
         right: isMobile ? '10px' : '20px',
         pointerEvents: 'none',
         zIndex: 1000,
@@ -32,9 +34,9 @@ export default function GameUI() {
         marginBottom: isMobile ? '10px' : '20px',
         fontFamily: 'Inter, sans-serif',
         fontSize: isMobile ? '12px' : '14px',
-        maxWidth: isMobile ? '200px' : '300px',
+        maxWidth: isMobile ? '180px' : (isTablet ? '240px' : '300px'),
       }}>
-        <h3 style={{ margin: '0 0 8px 0', fontSize: isMobile ? '14px' : '18px' }}>🎃 Pumpkin Farm</h3>
+        <h3 style={{ margin: '0 0 8px 0', fontSize: isMobile ? '13px' : (isTablet ? '16px' : '18px') }}>🎃 Pumpkin Farm</h3>
         
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
           <div>

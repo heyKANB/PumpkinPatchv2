@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useIsMobile } from '../hooks/use-is-mobile';
+import { useIsTablet } from '../hooks/use-is-tablet';
 import MatchingGame from './MatchingGame';
 
 interface MaintenanceMiniGameProps {
@@ -41,6 +42,7 @@ export default function MaintenanceMiniGame({
   const [targetSequence] = useState(['1', '2', '3', '1']);
   const [timingAccuracy, setTimingAccuracy] = useState(0);
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
 
   // Initialize repair tasks based on equipment type
   useEffect(() => {
@@ -236,7 +238,7 @@ export default function MaintenanceMiniGame({
         backgroundColor: 'white',
         borderRadius: '15px',
         padding: isMobile ? '20px' : '30px',
-        maxWidth: currentTask?.type === 'matching' ? (isMobile ? '95vw' : '600px') : (isMobile ? '90vw' : '500px'),
+        maxWidth: currentTask?.type === 'matching' ? (isMobile ? '95vw' : (isTablet ? '80vw' : '600px')) : (isMobile ? '90vw' : (isTablet ? '70vw' : '500px')),
         width: '100%',
         textAlign: 'center',
         maxHeight: '90vh',

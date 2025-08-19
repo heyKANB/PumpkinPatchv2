@@ -1,5 +1,6 @@
 import { useEquipment } from "../lib/stores/useEquipment";
 import { useIsMobile } from "../hooks/use-is-mobile";
+import { useIsTablet } from "../hooks/use-is-tablet";
 
 interface EquipmentShedMenuProps {
   onClose: () => void;
@@ -9,6 +10,7 @@ interface EquipmentShedMenuProps {
 export default function EquipmentShedMenu({ onClose, onSelectEquipment }: EquipmentShedMenuProps) {
   const { equipment } = useEquipment();
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
 
   const getEquipmentIcon = (type: string) => {
     switch (type) {
@@ -62,7 +64,7 @@ export default function EquipmentShedMenu({ onClose, onSelectEquipment }: Equipm
         padding: isMobile ? '15px' : '20px',
         borderRadius: '15px 15px 0 0',
         width: '100%',
-        maxWidth: isMobile ? '350px' : '500px',
+        maxWidth: isMobile ? '350px' : (isTablet ? '600px' : '500px'),
         textAlign: 'center',
         border: '3px solid #8B4513'
       }}>
@@ -90,7 +92,7 @@ export default function EquipmentShedMenu({ onClose, onSelectEquipment }: Equipm
         backgroundColor: 'rgba(101, 67, 33, 0.9)',
         padding: isMobile ? '15px' : '20px',
         width: '100%',
-        maxWidth: isMobile ? '350px' : '500px',
+        maxWidth: isMobile ? '350px' : (isTablet ? '600px' : '500px'),
         minHeight: '300px',
         border: '3px solid #8B4513',
         borderTop: 'none',
@@ -191,7 +193,7 @@ export default function EquipmentShedMenu({ onClose, onSelectEquipment }: Equipm
         padding: isMobile ? '12px' : '15px',
         borderRadius: '0 0 15px 15px',
         width: '100%',
-        maxWidth: isMobile ? '350px' : '500px',
+        maxWidth: isMobile ? '350px' : (isTablet ? '600px' : '500px'),
         textAlign: 'center',
         border: '3px solid #8B4513',
         borderTop: 'none'

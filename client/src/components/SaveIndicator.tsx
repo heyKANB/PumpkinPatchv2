@@ -32,16 +32,16 @@ const SaveIndicator: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50 pointer-events-none">
+    <div className="fixed top-20 md:top-4 right-4 z-50 pointer-events-none">
       {showSaving && (
-        <div className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 animate-fade-in">
-          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-          <span className="text-sm font-medium">Saving...</span>
+        <div className="bg-green-600 text-white px-3 md:px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 animate-fade-in">
+          <div className="w-3 md:w-4 h-3 md:h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          <span className="text-xs md:text-sm font-medium">Saving...</span>
         </div>
       )}
       
       {!showSaving && lastSaveTime && (
-        <div className="bg-black/40 text-white px-3 py-1 rounded text-xs backdrop-blur-sm">
+        <div className="bg-black/40 text-white px-2 md:px-3 py-1 rounded text-xs backdrop-blur-sm">
           Last saved: {formatLastSave(lastSaveTime)}
         </div>
       )}

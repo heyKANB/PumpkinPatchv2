@@ -31,24 +31,24 @@ const XPNotification: React.FC<XPNotificationProps> = ({ gain, onComplete }) => 
   return (
     <div
       className={`
-        flex items-center gap-3 p-3 rounded-lg border backdrop-blur-sm
-        transition-all duration-300 ease-out
+        flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-lg border backdrop-blur-sm
+        transition-all duration-300 ease-out text-sm md:text-base
         ${visible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'}
         ${getActivityColor(gain.activity.type)}
       `}
     >
       <div className="flex-shrink-0">
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <svg className="w-4 md:w-5 h-4 md:h-5" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
         </svg>
       </div>
       
       <div className="flex-grow min-w-0">
-        <div className="font-medium text-sm">{gain.activity.name}</div>
+        <div className="font-medium text-xs md:text-sm">{gain.activity.name}</div>
         <div className="text-xs opacity-75">+{gain.amount} XP</div>
       </div>
       
-      <div className="flex-shrink-0 font-bold">
+      <div className="flex-shrink-0 font-bold text-xs md:text-sm">
         +{gain.amount}
       </div>
     </div>
@@ -83,7 +83,7 @@ const XPGainNotifications: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-20 right-4 z-50 space-y-2 max-w-xs">
+    <div className="fixed top-32 md:top-20 right-4 z-50 space-y-2 max-w-xs">
       {displayedGains.map((gain, index) => (
         <XPNotification
           key={`${gain.timestamp}-${gain.activity.name}-${index}`}
