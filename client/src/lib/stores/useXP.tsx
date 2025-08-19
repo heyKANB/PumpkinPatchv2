@@ -128,7 +128,7 @@ export const useXP = create<XPState>((set, get) => ({
       currentXP,
       level: newLevel,
       totalXPEarned: newTotalXP,
-      recentGains: [...state.recentGains.slice(-4), xpGain] // Keep last 5 gains
+      recentGains: [...state.recentGains.slice(-2), xpGain] // Keep last 3 gains only
     });
 
     // Log XP gain and level up
@@ -166,6 +166,19 @@ export const useXP = create<XPState>((set, get) => ({
 
   clearRecentGains: () => {
     set({ recentGains: [] });
+  },
+  
+  // Auto-clear old gains periodically
+  cleanupOldGains: () => {
+    const state = get();
+    const now = Date.now();
+    const filteredGains = state.recentGains.filter(gain => 
+      now - gain.timestamp < 5000 // Keep gains less than 5 seconds old
+    );
+    
+    if (filteredGains.length !== state.recentGains.length) {
+      set({ recentGains: filteredGains });
+    }
   },
 
   setXP: (totalXP: number) => {

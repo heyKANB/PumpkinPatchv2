@@ -10,12 +10,19 @@ const XPNotification: React.FC<XPNotificationProps> = ({ gain, onComplete }) => 
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Start fading immediately, then remove after fade completes
+    const fadeTimer = setTimeout(() => {
       setVisible(false);
-      setTimeout(onComplete, 300); // Wait for fade out animation
-    }, 3000);
+    }, 800); // Show for 0.8 seconds then start fading
+    
+    const removeTimer = setTimeout(() => {
+      onComplete();
+    }, 1200); // Remove completely after 1.2 seconds total
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(removeTimer);
+    };
   }, [onComplete]);
 
   const getActivityColor = (type: string) => {
