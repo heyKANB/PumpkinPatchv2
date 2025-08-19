@@ -171,8 +171,8 @@ export default function PrivacyPage() {
             If you have questions about this Privacy Policy or our data practices, please contact us:
           </p>
           <div className="space-y-2 text-gray-700">
-            <p><strong>Email:</strong> privacy@huntergames.com</p>
-            <p><strong>Support:</strong> support@huntergames.com</p>
+            <p><strong>Email:</strong> kathrynbrown@heykanb.com</p>
+            <p><strong>Support:</strong> kathrynbrown@heykanb.com</p>
             <p><strong>Address:</strong> Hunter Games Privacy Team</p>
           </div>
         </div>

@@ -23,8 +23,8 @@ export default function SupportPage() {
                 <Mail className="w-5 h-5 mr-3 text-gray-500" />
                 <div>
                   <p className="font-medium">Email Support</p>
-                  <a href="mailto:support@huntergames.com" className="text-blue-600 hover:text-blue-800">
-                    support@huntergames.com
+                  <a href="mailto:kathrynbrown@heykanb.com" className="text-blue-600 hover:text-blue-800">
+                    kathrynbrown@heykanb.com
                   </a>
                 </div>
               </div>

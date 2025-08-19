@@ -177,8 +177,8 @@ export default function TermsPage() {
             If you have any questions about these Terms of Service, please contact us:
           </p>
           <div className="space-y-2 text-gray-700">
-            <p><strong>Email:</strong> legal@huntergames.com</p>
-            <p><strong>Support:</strong> support@huntergames.com</p>
+            <p><strong>Email:</strong> kathrynbrown@heykanb.com</p>
+            <p><strong>Support:</strong> kathrynbrown@heykanb.com</p>
           </div>
         </div>
 
