@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { FARM_SIZE } from "../constants";
+import { useXP, XP_ACTIVITIES } from "./useXP";
 
 export type PumpkinStage = 'seed' | 'sprout' | 'growing' | 'mature';
 
@@ -22,6 +23,10 @@ export interface PlayerInventory {
 interface FarmState {
   farmGrid: FarmPlot[][];
   playerInventory: PlayerInventory;
+  isFirstPlant: boolean;
+  isFirstHarvest: boolean;
+  consecutiveHarvests: number;
+  lastHarvestTime: number;
   
   // Actions
   initializeFarm: () => void;
@@ -33,6 +38,7 @@ interface FarmState {
   // Save/Load actions
   setFarmGrid: (grid: FarmPlot[][]) => void;
   setInventory: (inventory: PlayerInventory) => void;
+  setXPState: (xpState: { isFirstPlant: boolean; isFirstHarvest: boolean; consecutiveHarvests: number; lastHarvestTime: number }) => void;
 }
 
 const createEmptyGrid = (): FarmPlot[][] => {
@@ -53,6 +59,10 @@ export const useFarm = create<FarmState>()(
       seeds: 10, // Start with 10 seeds
       harvestedPumpkins: 0,
     },
+    isFirstPlant: true,
+    isFirstHarvest: true,
+    consecutiveHarvests: 0,
+    lastHarvestTime: 0,
     
     initializeFarm: () => {
       set({
@@ -60,7 +70,11 @@ export const useFarm = create<FarmState>()(
         playerInventory: {
           seeds: 10,
           harvestedPumpkins: 0,
-        }
+        },
+        isFirstPlant: true,
+        isFirstHarvest: true,
+        consecutiveHarvests: 0,
+        lastHarvestTime: 0,
       });
     },
     
@@ -91,13 +105,28 @@ export const useFarm = create<FarmState>()(
         })
       );
       
-      set({
-        farmGrid: newGrid,
-        playerInventory: {
-          ...state.playerInventory,
-          seeds: state.playerInventory.seeds - 1,
-        }
-      });
+      // Award XP for planting
+      const xpStore = useXP.getState();
+      if (state.isFirstPlant) {
+        xpStore.addXP(XP_ACTIVITIES.FIRST_PLANT);
+        set({
+          farmGrid: newGrid,
+          playerInventory: {
+            ...state.playerInventory,
+            seeds: state.playerInventory.seeds - 1,
+          },
+          isFirstPlant: false
+        });
+      } else {
+        xpStore.addXP(XP_ACTIVITIES.PLANT_SEED);
+        set({
+          farmGrid: newGrid,
+          playerInventory: {
+            ...state.playerInventory,
+            seeds: state.playerInventory.seeds - 1,
+          }
+        });
+      }
       
       return true;
     },
@@ -121,14 +150,47 @@ export const useFarm = create<FarmState>()(
         })
       );
       
-      set({
-        farmGrid: newGrid,
-        playerInventory: {
-          ...state.playerInventory,
-          harvestedPumpkins: state.playerInventory.harvestedPumpkins + 1,
-          seeds: state.playerInventory.seeds + 2, // Get 2 seeds from each harvested pumpkin
+      // Award XP for harvesting
+      const xpStore = useXP.getState();
+      const now = Date.now();
+      const timeSinceLastHarvest = now - state.lastHarvestTime;
+      
+      // Check for consecutive harvests (within 10 seconds)
+      let newConsecutiveHarvests = timeSinceLastHarvest < 10000 ? state.consecutiveHarvests + 1 : 1;
+      
+      if (state.isFirstHarvest) {
+        xpStore.addXP(XP_ACTIVITIES.FIRST_HARVEST);
+        set({
+          farmGrid: newGrid,
+          playerInventory: {
+            ...state.playerInventory,
+            harvestedPumpkins: state.playerInventory.harvestedPumpkins + 1,
+            seeds: state.playerInventory.seeds + 2, // Get 2 seeds from each harvested pumpkin
+          },
+          isFirstHarvest: false,
+          consecutiveHarvests: newConsecutiveHarvests,
+          lastHarvestTime: now
+        });
+      } else {
+        xpStore.addXP(XP_ACTIVITIES.HARVEST_PUMPKIN);
+        
+        // Award bonus XP for mass harvest
+        if (newConsecutiveHarvests >= 5) {
+          xpStore.addXP(XP_ACTIVITIES.MASS_HARVEST);
+          newConsecutiveHarvests = 0; // Reset counter after achievement
         }
-      });
+        
+        set({
+          farmGrid: newGrid,
+          playerInventory: {
+            ...state.playerInventory,
+            harvestedPumpkins: state.playerInventory.harvestedPumpkins + 1,
+            seeds: state.playerInventory.seeds + 2, // Get 2 seeds from each harvested pumpkin
+          },
+          consecutiveHarvests: newConsecutiveHarvests,
+          lastHarvestTime: now
+        });
+      }
       
       return true;
     },
@@ -198,6 +260,15 @@ export const useFarm = create<FarmState>()(
     
     setInventory: (inventory: PlayerInventory) => {
       set({ playerInventory: inventory });
+    },
+    
+    setXPState: (xpState: { isFirstPlant: boolean; isFirstHarvest: boolean; consecutiveHarvests: number; lastHarvestTime: number }) => {
+      set({ 
+        isFirstPlant: xpState.isFirstPlant,
+        isFirstHarvest: xpState.isFirstHarvest,
+        consecutiveHarvests: xpState.consecutiveHarvests,
+        lastHarvestTime: xpState.lastHarvestTime
+      });
     },
   }))
 );

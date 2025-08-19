@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { useXP, XP_ACTIVITIES } from './useXP';
 
 interface Equipment {
   id: string;
@@ -65,6 +66,11 @@ export const useEquipment = create<EquipmentStore>((set, get) => ({
 
   repairEquipment: (equipmentId, newDurability) => {
     console.log(`[Equipment Store] Repairing equipment: ${equipmentId}, new durability: ${newDurability}`);
+    
+    // Award XP for equipment repair
+    const xpStore = useXP.getState();
+    xpStore.addXP(XP_ACTIVITIES.REPAIR_EQUIPMENT);
+    
     set(state => {
       const updatedEquipment = state.equipment.map(item => {
         if (item.id === equipmentId) {

@@ -63,7 +63,9 @@ iOS App Configuration:
 - **Equipment Maintenance System**: Interactive shed with proximity detection and repair mini-games
 - **Location Travel System**: Field gate with travel menu for future marketplace and kitchen expansions
 - **Currency System**: Coin counter display with Zustand state management for future marketplace transactions
-- **Persistent Progress System**: Automatic save/load functionality preserving farm state, inventory, coins, and equipment status between sessions
+- **XP Progression System**: Level-based progression with activity-specific rewards (planting: 5 XP, harvesting: 15 XP, equipment repair: 25 XP)
+- **Achievement System**: Special XP bonuses for first-time activities and consecutive actions (First Plant: 50 XP, First Harvest: 100 XP, Mass Harvest: 75 XP)
+- **Persistent Progress System**: Automatic save/load functionality preserving farm state, inventory, coins, equipment status, and XP progress between sessions
 - **Auto-Save Features**: Progress automatically saved every 10 seconds during gameplay and when app is closed or minimized
 
 # External Dependencies

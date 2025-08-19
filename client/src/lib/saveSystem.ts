@@ -2,6 +2,7 @@ import { useFarm } from './stores/useFarm';
 import { useCoins } from './stores/useCoins';
 import { useEquipment } from './stores/useEquipment';
 import { useGame } from './stores/useGame';
+import { useXP } from './stores/useXP';
 
 interface SaveData {
   version: string;
@@ -23,6 +24,11 @@ interface SaveData {
     phase: string;
     lastPlayTime: number;
   };
+  xp: {
+    currentXP: number;
+    level: number;
+    totalXPEarned: number;
+  };
 }
 
 const SAVE_KEY = 'pumpkin-farm-save';
@@ -35,6 +41,7 @@ export class SaveSystem {
       const coinsState = useCoins.getState();
       const equipmentState = useEquipment.getState();
       const gameState = useGame.getState();
+      const xpState = useXP.getState();
 
       const saveData: SaveData = {
         version: SAVE_VERSION,
@@ -42,6 +49,10 @@ export class SaveSystem {
         farm: {
           farmGrid: farmState.farmGrid,
           inventory: farmState.playerInventory,
+          isFirstPlant: farmState.isFirstPlant,
+          isFirstHarvest: farmState.isFirstHarvest,
+          consecutiveHarvests: farmState.consecutiveHarvests,
+          lastHarvestTime: farmState.lastHarvestTime,
         },
         coins: {
           count: coinsState.coins,
@@ -52,6 +63,11 @@ export class SaveSystem {
         game: {
           phase: gameState.phase,
           lastPlayTime: Date.now(),
+        },
+        xp: {
+          currentXP: xpState.currentXP,
+          level: xpState.level,
+          totalXPEarned: xpState.totalXPEarned,
         }
       };
 
@@ -93,11 +109,24 @@ export class SaveSystem {
     try {
       // Restore farm state
       if (saveData.farm) {
+        const farmStore = useFarm.getState();
         if (saveData.farm.farmGrid) {
-          useFarm.getState().setFarmGrid(saveData.farm.farmGrid);
+          farmStore.setFarmGrid(saveData.farm.farmGrid);
         }
         if (saveData.farm.inventory) {
-          useFarm.getState().setInventory(saveData.farm.inventory);
+          farmStore.setInventory(saveData.farm.inventory);
+        }
+        // Restore XP-related farm state
+        if (saveData.farm.isFirstPlant !== undefined || 
+            saveData.farm.isFirstHarvest !== undefined ||
+            saveData.farm.consecutiveHarvests !== undefined ||
+            saveData.farm.lastHarvestTime !== undefined) {
+          farmStore.setXPState({
+            isFirstPlant: saveData.farm.isFirstPlant ?? true,
+            isFirstHarvest: saveData.farm.isFirstHarvest ?? true,
+            consecutiveHarvests: saveData.farm.consecutiveHarvests ?? 0,
+            lastHarvestTime: saveData.farm.lastHarvestTime ?? 0
+          });
         }
       }
 
@@ -116,6 +145,12 @@ export class SaveSystem {
         if (saveData.game.phase) {
           useGame.getState().setPhase(saveData.game.phase as any);
         }
+      }
+
+      // Restore XP state
+      if (saveData.xp) {
+        const xpStore = useXP.getState();
+        xpStore.setXP(saveData.xp.totalXPEarned);
       }
 
       console.log('Game state restored successfully');
