@@ -10,6 +10,7 @@ interface GameState {
   start: () => void;
   restart: () => void;
   end: () => void;
+  setPhase: (phase: GamePhase) => void;
 }
 
 export const useGame = create<GameState>()(
@@ -38,6 +39,10 @@ export const useGame = create<GameState>()(
         }
         return {};
       });
+    },
+
+    setPhase: (phase: GamePhase) => {
+      set({ phase });
     }
   }))
 );

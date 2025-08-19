@@ -5,6 +5,7 @@ interface CoinState {
   addCoins: (amount: number) => void;
   spendCoins: (amount: number) => boolean;
   resetCoins: () => void;
+  setCoins: (amount: number) => void;
 }
 
 export const useCoins = create<CoinState>((set, get) => ({
@@ -25,5 +26,9 @@ export const useCoins = create<CoinState>((set, get) => ({
 
   resetCoins: () => {
     set({ coins: 0 });
+  },
+
+  setCoins: (amount: number) => {
+    set({ coins: amount });
   }
 }));

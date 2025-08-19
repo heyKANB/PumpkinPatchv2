@@ -24,11 +24,14 @@ iOS App Configuration:
 - **React Three Fiber**: Core 3D rendering engine using React components for WebGL scenes
 - **Radix UI Components**: Complete UI component library for interface elements
 - **Tailwind CSS**: Utility-first CSS framework for styling
-- **Zustand State Management**: Three main stores handle game state:
+- **Zustand State Management**: Four main stores handle game state:
   - `useFarm`: Manages farm grid, pumpkin growth stages, and player inventory
   - `useAudio`: Controls sound effects and music with mute functionality
-  - `useGame`: Tracks game phases (ready, playing, ended)
+  - `useGame`: Tracks game phases (ready, playing, ended) 
+  - `useCoins`: Manages player coin balance and transactions
+  - `useEquipment`: Handles equipment durability and maintenance system
 - **TanStack React Query**: Data fetching and caching for API communication
+- **Persistent Save System**: LocalStorage-based progress saving with automatic backups
 
 ## Backend Architecture
 - **Express.js Server**: RESTful API server with middleware for JSON parsing and request logging
@@ -60,6 +63,8 @@ iOS App Configuration:
 - **Equipment Maintenance System**: Interactive shed with proximity detection and repair mini-games
 - **Location Travel System**: Field gate with travel menu for future marketplace and kitchen expansions
 - **Currency System**: Coin counter display with Zustand state management for future marketplace transactions
+- **Persistent Progress System**: Automatic save/load functionality preserving farm state, inventory, coins, and equipment status between sessions
+- **Auto-Save Features**: Progress automatically saved every 10 seconds during gameplay and when app is closed or minimized
 
 # External Dependencies
 

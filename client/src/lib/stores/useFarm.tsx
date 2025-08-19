@@ -29,6 +29,10 @@ interface FarmState {
   harvestPumpkin: (row: number, col: number) => boolean;
   updateGrowth: () => void;
   getTotalPumpkinsByStage: () => Record<PumpkinStage, number>;
+  
+  // Save/Load actions
+  setFarmGrid: (grid: FarmPlot[][]) => void;
+  setInventory: (inventory: PlayerInventory) => void;
 }
 
 const createEmptyGrid = (): FarmPlot[][] => {
@@ -185,6 +189,15 @@ export const useFarm = create<FarmState>()(
       });
       
       return counts;
+    },
+    
+    // Save/Load actions
+    setFarmGrid: (grid: FarmPlot[][]) => {
+      set({ farmGrid: grid });
+    },
+    
+    setInventory: (inventory: PlayerInventory) => {
+      set({ playerInventory: inventory });
     },
   }))
 );

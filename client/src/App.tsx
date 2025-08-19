@@ -12,7 +12,9 @@ import EquipmentShedMenu from "./components/EquipmentShedMenu";
 import MaintenanceMiniGame from "./components/MaintenanceMiniGame";
 import LocationMenu from "./components/LocationMenu";
 import CoinCounter from "./components/CoinCounter";
+import SaveIndicator from "./components/SaveIndicator";
 import { useEquipment } from "./lib/stores/useEquipment";
+import { SaveSystem } from "./lib/saveSystem";
 import SupportPage from "./pages/support";
 import PrivacyPage from "./pages/privacy";
 import TermsPage from "./pages/terms";
@@ -43,7 +45,7 @@ function App() {
   const isMobile = useIsMobile();
   const deviceInfo = useDeviceInfo();
 
-  // Initialize audio on component mount
+  // Initialize audio and save system on component mount
   useEffect(() => {
     // Load sound effects
     const hitAudio = new Audio('/sounds/hit.mp3');
@@ -54,6 +56,16 @@ function App() {
     
     setHitSound(hitAudio);
     setSuccessSound(successAudio);
+
+    // Initialize save system and load previous progress
+    const saveData = SaveSystem.load();
+    if (saveData) {
+      console.log('Restoring previous game progress...');
+      SaveSystem.restore(saveData);
+    }
+
+    // Start auto-save system
+    SaveSystem.autoSave();
     
     setShowCanvas(true);
   }, [setHitSound, setSuccessSound]);
@@ -201,6 +213,9 @@ function App() {
             onClose={handleLocationMenuClose}
             onSelectLocation={handleLocationSelect}
           />
+          
+          {/* Save Indicator */}
+          <SaveIndicator />
           
           {/* Debug info for development */}
           <MobileDebugInfo />

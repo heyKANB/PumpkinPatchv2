@@ -20,6 +20,7 @@ interface EquipmentStore {
   repairEquipment: (equipmentId: string, newDurability: number) => void;
   degradeEquipment: () => void;
   setMaintenanceGameActive: (active: boolean) => void;
+  setItems: (equipment: Equipment[]) => void;
 }
 
 export const useEquipment = create<EquipmentStore>((set, get) => ({
@@ -105,5 +106,9 @@ export const useEquipment = create<EquipmentStore>((set, get) => ({
 
   setMaintenanceGameActive: (active) => {
     set({ maintenanceGameActive: active });
+  },
+
+  setItems: (equipment: Equipment[]) => {
+    set({ equipment });
   }
 }));
