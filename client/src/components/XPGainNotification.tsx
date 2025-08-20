@@ -17,14 +17,14 @@ const XPNotification: React.FC<XPNotificationProps> = ({ gain, onComplete }) => 
     const fadeTimer = setTimeout(() => {
       console.log('[XP Notification] Starting fade out for:', gain.activity.name);
       setIsVisible(false);
-    }, 800);
+    }, 600); // Show for 0.6 seconds then start fading
     
     // Remove component after fade completes
     const removeTimer = setTimeout(() => {
       console.log('[XP Notification] Removing notification for:', gain.activity.name);
       setShouldRemove(true);
       onComplete();
-    }, 1300); // Extra time for fade animation
+    }, 1100); // Remove after fade completes (0.6s + 0.5s transition)
 
     return () => {
       clearTimeout(fadeTimer);
@@ -49,25 +49,45 @@ const XPNotification: React.FC<XPNotificationProps> = ({ gain, onComplete }) => 
 
   return (
     <div
-      className={`
-        flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-lg border backdrop-blur-sm
-        transition-all duration-500 ease-out text-sm md:text-base
-        ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'}
-        ${getActivityColor(gain.activity.type)}
-      `}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        padding: '8px 12px',
+        borderRadius: '8px',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        backdropFilter: 'blur(4px)',
+        fontSize: '14px',
+        fontFamily: 'Inter, sans-serif',
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateX(0)' : 'translateX(100%)',
+        transition: 'all 0.5s ease-out',
+        backgroundColor: gain.activity.type === 'plant' ? 'rgba(34, 197, 94, 0.2)' : 
+                        gain.activity.type === 'harvest' ? 'rgba(251, 146, 60, 0.2)' : 
+                        gain.activity.type === 'repair' ? 'rgba(59, 130, 246, 0.2)' : 
+                        'rgba(234, 179, 8, 0.2)',
+        color: gain.activity.type === 'plant' ? '#22c55e' : 
+               gain.activity.type === 'harvest' ? '#fb923c' : 
+               gain.activity.type === 'repair' ? '#3b82f6' : 
+               '#eab308',
+        borderColor: gain.activity.type === 'plant' ? 'rgba(34, 197, 94, 0.3)' : 
+                     gain.activity.type === 'harvest' ? 'rgba(251, 146, 60, 0.3)' : 
+                     gain.activity.type === 'repair' ? 'rgba(59, 130, 246, 0.3)' : 
+                     'rgba(234, 179, 8, 0.3)'
+      }}
     >
-      <div className="flex-shrink-0">
-        <svg className="w-4 md:w-5 h-4 md:h-5" fill="currentColor" viewBox="0 0 20 20">
+      <div style={{ flexShrink: 0 }}>
+        <svg style={{ width: '16px', height: '16px' }} fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
         </svg>
       </div>
       
-      <div className="flex-grow min-w-0">
-        <div className="font-medium text-xs md:text-sm">{gain.activity.name}</div>
-        <div className="text-xs opacity-75">+{gain.amount} XP</div>
+      <div style={{ flexGrow: 1, minWidth: 0 }}>
+        <div style={{ fontWeight: 600, fontSize: '12px' }}>{gain.activity.name}</div>
+        <div style={{ fontSize: '11px', opacity: 0.8 }}>+{gain.amount} XP</div>
       </div>
       
-      <div className="flex-shrink-0 font-bold text-xs md:text-sm">
+      <div style={{ flexShrink: 0, fontWeight: 'bold', fontSize: '12px' }}>
         +{gain.amount}
       </div>
     </div>
