@@ -14,7 +14,6 @@ import LocationMenu from "./components/LocationMenu";
 import CoinCounter from "./components/CoinCounter";
 import SaveIndicator from "./components/SaveIndicator";
 import XPBar from "./components/XPBar";
-import XPGainNotifications from "./components/XPGainNotification";
 import LevelUpNotification from "./components/LevelUpNotification";
 import { useEquipment } from "./lib/stores/useEquipment";
 import { useXP } from "./lib/stores/useXP";
@@ -46,15 +45,15 @@ function App() {
   const [maintenanceGameActive, setMaintenanceGameActive] = useState(false);
   const { setHitSound, setSuccessSound } = useAudio();
   const { equipment, selectedEquipment: storeSelectedEquipment, selectEquipment, repairEquipment } = useEquipment();
-  const { level, recentGains } = useXP();
+  const { level } = useXP();
   const [showLevelUp, setShowLevelUp] = useState<number | null>(null);
 
   // Listen for level ups
   useEffect(() => {
     const unsubscribe = useXP.subscribe(
       (state) => state.level,
-      (level: number, prevLevel: number) => {
-        if (level > prevLevel) {
+      (level: number) => {
+        if (level > 1) {
           setShowLevelUp(level);
         }
       }
@@ -205,7 +204,7 @@ function App() {
           <XPBar />
           
           {/* XP Gain Notifications */}
-          <XPGainNotifications />
+
           
           {/* Mobile Controls - only shown on mobile */}
           {isMobile && (

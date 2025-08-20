@@ -114,12 +114,6 @@ export const useXP = create<XPState>((set, get) => ({
     const newLevel = calculateLevelFromXP(newTotalXP);
     const totalXPForCurrentLevel = calculateTotalXPForLevel(newLevel);
     const currentXP = newTotalXP - totalXPForCurrentLevel;
-    
-    const xpGain: XPGain = {
-      activity,
-      amount: xpGained,
-      timestamp: Date.now()
-    };
 
     // Check for level up
     const leveledUp = newLevel > state.level;
@@ -128,7 +122,7 @@ export const useXP = create<XPState>((set, get) => ({
       currentXP,
       level: newLevel,
       totalXPEarned: newTotalXP,
-      recentGains: [...state.recentGains.slice(-2), xpGain] // Keep last 3 gains only
+      recentGains: [] // No longer storing gains for notifications
     });
 
     // Log XP gain and level up
