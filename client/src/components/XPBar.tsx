@@ -6,7 +6,8 @@ const XPBar: React.FC = () => {
   const progress = getLevelProgress();
 
   return (
-    <div className="fixed top-4 left-4 z-50 bg-black/70 backdrop-blur-sm rounded-lg p-2 md:p-3 text-white w-48 md:w-52">
+    <div className="fixed left-4 z-50 bg-black/70 backdrop-blur-sm rounded-lg p-2 md:p-3 text-white w-48 md:w-52" 
+         style={{ top: window.navigator.userAgent.includes('iPhone') ? '60px' : '16px' }}>
       <div className="flex items-center justify-between mb-1 md:mb-2">
         <span className="text-xs md:text-sm font-bold text-yellow-400">Level {level}</span>
         <span className="text-xs text-gray-300">
