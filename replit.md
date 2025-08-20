@@ -10,7 +10,7 @@ Official Website: HunterGames.app
 iOS App Configuration: 
 - Bundle ID: com.huntergames.pumpkinpatch
 - App Store Connect Integration: "Apple Connect App Mgr"
-- Version: 3.5.0, Build: 30
+- Version: 3.6.0, Build: 31
 - Deployment Method: Capacitor iOS (native app)
 - CI/CD Pipeline: Codemagic with automated build and TestFlight submission
 - Privacy Compliance: App Tracking Transparency (ATT) framework implemented
