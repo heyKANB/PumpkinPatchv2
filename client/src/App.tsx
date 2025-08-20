@@ -53,8 +53,8 @@ function App() {
   useEffect(() => {
     const unsubscribe = useXP.subscribe(
       (state) => state.level,
-      (level: number) => {
-        if (level > 1 && level > useXP.getState().level) {
+      (level: number, prevLevel: number) => {
+        if (level > prevLevel) {
           setShowLevelUp(level);
         }
       }

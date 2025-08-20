@@ -13,6 +13,10 @@ interface SaveData {
       seeds: number;
       harvestedPumpkins: number;
     };
+    isFirstPlant: boolean;
+    isFirstHarvest: boolean;
+    consecutiveHarvests: number;
+    lastHarvestTime: number;
   };
   coins: {
     count: number;
@@ -160,14 +164,28 @@ export class SaveSystem {
   }
 
   static autoSave(): void {
-    // Auto-save every 10 seconds during gameplay
+    // Save immediately
+    SaveSystem.save();
+    
+    // Set up auto-save every 10 seconds
     setInterval(() => {
-      const gameState = useGame.getState();
-      if (gameState.phase === 'playing') {
+      SaveSystem.save();
+    }, 10000);
+
+    // Save when the page is about to unload
+    window.addEventListener('beforeunload', () => {
+      SaveSystem.save();
+    });
+
+    // Save when the page becomes hidden (mobile background)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
         SaveSystem.save();
       }
-    }, 10000);
+    });
   }
+
+
 
   static clearSave(): void {
     try {
@@ -187,16 +205,3 @@ export class SaveSystem {
   }
 }
 
-// Auto-save when the page is about to be closed
-if (typeof window !== 'undefined') {
-  window.addEventListener('beforeunload', () => {
-    SaveSystem.save();
-  });
-
-  // Auto-save when the page becomes hidden (mobile app switching)
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') {
-      SaveSystem.save();
-    }
-  });
-}
