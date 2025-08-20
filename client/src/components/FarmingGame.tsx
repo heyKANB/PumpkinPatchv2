@@ -44,10 +44,20 @@ export default function FarmingGame({
   const [shedMenuOpen, setShedMenuOpen] = useState(false);
   const [currentPlayerPosition, setCurrentPlayerPosition] = useState<[number, number, number]>([0, 0, 0]);
 
-  // Initialize the farm and equipment when the game starts
+  // Initialize the farm and equipment when the game starts (only if no save data exists)
   useEffect(() => {
-    initializeFarm();
-    initializeEquipment();
+    // Check if save data exists before initializing
+    const hasSaveData = localStorage.getItem('pumpkin-farm-save') !== null;
+    
+    if (!hasSaveData) {
+      // Only initialize if there's no existing save data
+      initializeFarm();
+      initializeEquipment();
+    } else {
+      // If save data exists, just initialize equipment (farm state is already loaded)
+      initializeEquipment();
+    }
+    
     setGameStarted(true);
     
     // Track game start event
