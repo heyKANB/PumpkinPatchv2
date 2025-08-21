@@ -19,7 +19,7 @@ export default function GameUI() {
       className={isMobile ? "safe-area-top safe-area-left safe-area-right" : ""}
       style={{
         position: 'absolute',
-        top: isTablet ? '120px' : (isMobile ? '120px' : '80px'), // Extra space for iOS safe area
+        top: isTablet ? '140px' : (isMobile ? '140px' : '80px'), // Extra space for iOS safe area and XP bar
         left: isTablet ? '260px' : (isMobile ? '10px' : '20px'), // Move right for tablet to avoid XP bar
         right: isMobile ? '10px' : '20px',
         pointerEvents: 'none',
