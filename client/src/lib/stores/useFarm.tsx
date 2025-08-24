@@ -3,21 +3,40 @@ import { subscribeWithSelector } from "zustand/middleware";
 import { FARM_SIZE } from "../constants";
 import { useXP, XP_ACTIVITIES } from "./useXP";
 
-export type PumpkinStage = 'seed' | 'sprout' | 'growing' | 'mature';
+export type CropType = 'pumpkin' | 'corn';
+export type CropStage = 'seed' | 'sprout' | 'growing' | 'mature';
 
-export interface Pumpkin {
-  stage: PumpkinStage;
+export interface Crop {
+  type: CropType;
+  stage: CropStage;
   plantedTime: number;
   lastGrowthTime: number;
 }
 
 export interface FarmPlot {
-  pumpkin: Pumpkin | null;
+  crop: Crop | null;
+}
+
+export interface CropSeeds {
+  pumpkin: number;
+  corn: number;
+}
+
+export interface HarvestedCrops {
+  pumpkin: number;
+  corn: number;
+}
+
+export interface UnlockedCrops {
+  pumpkin: boolean;
+  corn: boolean;
 }
 
 export interface PlayerInventory {
-  seeds: number;
-  harvestedPumpkins: number;
+  seeds: CropSeeds;
+  harvestedCrops: HarvestedCrops;
+  unlockedCrops: UnlockedCrops;
+  selectedCropType: CropType;
 }
 
 interface FarmState {
@@ -30,11 +49,14 @@ interface FarmState {
   
   // Actions
   initializeFarm: () => void;
-  plantPumpkin: (row: number, col: number) => boolean;
-  harvestPumpkin: (row: number, col: number) => boolean;
-  sellPumpkin: () => boolean;
+  plantCrop: (row: number, col: number, cropType?: CropType) => boolean;
+  harvestCrop: (row: number, col: number) => boolean;
+  sellCrop: (cropType: CropType) => boolean;
+  unlockCrop: (cropType: CropType) => boolean;
+  purchaseSeeds: (cropType: CropType, quantity: number) => boolean;
+  setSelectedCropType: (cropType: CropType) => void;
   updateGrowth: () => void;
-  getTotalPumpkinsByStage: () => Record<PumpkinStage, number>;
+  getTotalCropsByStage: () => Record<CropType, Record<CropStage, number>>;
   
   // Save/Load actions
   setFarmGrid: (grid: FarmPlot[][]) => void;
@@ -45,20 +67,54 @@ interface FarmState {
 const createEmptyGrid = (): FarmPlot[][] => {
   return Array(FARM_SIZE).fill(null).map(() =>
     Array(FARM_SIZE).fill(null).map(() => ({
-      pumpkin: null
+      crop: null
     }))
   );
 };
 
-const GROWTH_STAGES: PumpkinStage[] = ['seed', 'sprout', 'growing', 'mature'];
-const GROWTH_TIME_MS = 5000; // 5 seconds per stage
+const GROWTH_STAGES: CropStage[] = ['seed', 'sprout', 'growing', 'mature'];
+
+// Growth times per stage in milliseconds
+const CROP_GROWTH_TIMES: Record<CropType, number> = {
+  pumpkin: 5000, // 5 seconds per stage
+  corn: 12000,   // 12 seconds per stage (considerably longer)
+};
+
+// Crop unlock requirements
+export const CROP_UNLOCK_LEVELS: Record<CropType, number> = {
+  pumpkin: 1,
+  corn: 5,
+};
+
+// Crop unlock costs
+export const CROP_UNLOCK_COSTS: Record<CropType, number> = {
+  pumpkin: 0,  // Free
+  corn: 50,    // 50 coins
+};
+
+// Seed costs
+export const SEED_COSTS: Record<CropType, number> = {
+  pumpkin: 0,  // Free (as before)
+  corn: 2,     // 2 coins each
+};
 
 export const useFarm = create<FarmState>()(
   subscribeWithSelector((set, get) => ({
     farmGrid: createEmptyGrid(),
     playerInventory: {
-      seeds: 10, // Start with 10 seeds
-      harvestedPumpkins: 0,
+      seeds: {
+        pumpkin: 10, // Start with 10 pumpkin seeds
+        corn: 0,
+      },
+      harvestedCrops: {
+        pumpkin: 0,
+        corn: 0,
+      },
+      unlockedCrops: {
+        pumpkin: true,  // Pumpkins are unlocked from start
+        corn: false,    // Corn needs to be unlocked
+      },
+      selectedCropType: 'pumpkin' as CropType,
     },
     isFirstPlant: true,
     isFirstHarvest: true,
@@ -69,8 +125,19 @@ export const useFarm = create<FarmState>()(
       set({
         farmGrid: createEmptyGrid(),
         playerInventory: {
-          seeds: 10,
-          harvestedPumpkins: 0,
+          seeds: {
+            pumpkin: 10,
+            corn: 0,
+          },
+          harvestedCrops: {
+            pumpkin: 0,
+            corn: 0,
+          },
+          unlockedCrops: {
+            pumpkin: true,
+            corn: false,
+          },
+          selectedCropType: 'pumpkin' as CropType,
         },
         isFirstPlant: true,
         isFirstHarvest: true,
@@ -79,14 +146,16 @@ export const useFarm = create<FarmState>()(
       });
     },
     
-    plantPumpkin: (row: number, col: number) => {
+    plantCrop: (row: number, col: number, cropType?: CropType) => {
       const state = get();
+      const selectedCrop = cropType || state.playerInventory.selectedCropType;
       
       // Check if we have seeds and the plot is empty
-      if (state.playerInventory.seeds <= 0 || 
+      if (state.playerInventory.seeds[selectedCrop] <= 0 || 
           row < 0 || row >= FARM_SIZE || 
           col < 0 || col >= FARM_SIZE ||
-          state.farmGrid[row][col].pumpkin !== null) {
+          state.farmGrid[row][col].crop !== null ||
+          !state.playerInventory.unlockedCrops[selectedCrop]) {
         return false;
       }
       
@@ -95,8 +164,9 @@ export const useFarm = create<FarmState>()(
         farmRow.map((plot, colIndex) => {
           if (rowIndex === row && colIndex === col) {
             return {
-              pumpkin: {
-                stage: 'seed' as PumpkinStage,
+              crop: {
+                type: selectedCrop,
+                stage: 'seed' as CropStage,
                 plantedTime: now,
                 lastGrowthTime: now,
               }
@@ -114,7 +184,10 @@ export const useFarm = create<FarmState>()(
           farmGrid: newGrid,
           playerInventory: {
             ...state.playerInventory,
-            seeds: state.playerInventory.seeds - 1,
+            seeds: {
+              ...state.playerInventory.seeds,
+              [selectedCrop]: state.playerInventory.seeds[selectedCrop] - 1,
+            },
           },
           isFirstPlant: false
         });
@@ -124,7 +197,10 @@ export const useFarm = create<FarmState>()(
           farmGrid: newGrid,
           playerInventory: {
             ...state.playerInventory,
-            seeds: state.playerInventory.seeds - 1,
+            seeds: {
+              ...state.playerInventory.seeds,
+              [selectedCrop]: state.playerInventory.seeds[selectedCrop] - 1,
+            },
           }
         });
       }
@@ -132,20 +208,21 @@ export const useFarm = create<FarmState>()(
       return true;
     },
     
-    harvestPumpkin: (row: number, col: number) => {
+    harvestCrop: (row: number, col: number) => {
       const state = get();
       
-      // Check if the plot has a mature pumpkin
+      // Check if the plot has a mature crop
       if (row < 0 || row >= FARM_SIZE || 
           col < 0 || col >= FARM_SIZE ||
-          state.farmGrid[row][col].pumpkin?.stage !== 'mature') {
+          state.farmGrid[row][col].crop?.stage !== 'mature') {
         return false;
       }
       
+      const crop = state.farmGrid[row][col].crop!;
       const newGrid = state.farmGrid.map((farmRow, rowIndex) =>
         farmRow.map((plot, colIndex) => {
           if (rowIndex === row && colIndex === col) {
-            return { pumpkin: null };
+            return { crop: null };
           }
           return plot;
         })
@@ -165,8 +242,14 @@ export const useFarm = create<FarmState>()(
           farmGrid: newGrid,
           playerInventory: {
             ...state.playerInventory,
-            harvestedPumpkins: state.playerInventory.harvestedPumpkins + 1,
-            seeds: state.playerInventory.seeds + 2, // Get 2 seeds from each harvested pumpkin
+            harvestedCrops: {
+              ...state.playerInventory.harvestedCrops,
+              [crop.type]: state.playerInventory.harvestedCrops[crop.type] + 1,
+            },
+            seeds: {
+              ...state.playerInventory.seeds,
+              [crop.type]: state.playerInventory.seeds[crop.type] + (crop.type === 'pumpkin' ? 2 : 1), // Pumpkins give 2 seeds, corn gives 1
+            },
           },
           isFirstHarvest: false,
           consecutiveHarvests: newConsecutiveHarvests,
@@ -185,8 +268,14 @@ export const useFarm = create<FarmState>()(
           farmGrid: newGrid,
           playerInventory: {
             ...state.playerInventory,
-            harvestedPumpkins: state.playerInventory.harvestedPumpkins + 1,
-            seeds: state.playerInventory.seeds + 2, // Get 2 seeds from each harvested pumpkin
+            harvestedCrops: {
+              ...state.playerInventory.harvestedCrops,
+              [crop.type]: state.playerInventory.harvestedCrops[crop.type] + 1,
+            },
+            seeds: {
+              ...state.playerInventory.seeds,
+              [crop.type]: state.playerInventory.seeds[crop.type] + (crop.type === 'pumpkin' ? 2 : 1),
+            },
           },
           consecutiveHarvests: newConsecutiveHarvests,
           lastHarvestTime: now
@@ -203,21 +292,22 @@ export const useFarm = create<FarmState>()(
       
       const newGrid = state.farmGrid.map(farmRow =>
         farmRow.map(plot => {
-          if (!plot.pumpkin || plot.pumpkin.stage === 'mature') {
+          if (!plot.crop || plot.crop.stage === 'mature') {
             return plot;
           }
           
-          const timeSinceLastGrowth = now - plot.pumpkin.lastGrowthTime;
+          const timeSinceLastGrowth = now - plot.crop.lastGrowthTime;
+          const growthTime = CROP_GROWTH_TIMES[plot.crop.type];
           
-          if (timeSinceLastGrowth >= GROWTH_TIME_MS) {
-            const currentStageIndex = GROWTH_STAGES.indexOf(plot.pumpkin.stage);
+          if (timeSinceLastGrowth >= growthTime) {
+            const currentStageIndex = GROWTH_STAGES.indexOf(plot.crop.stage);
             const nextStageIndex = Math.min(currentStageIndex + 1, GROWTH_STAGES.length - 1);
             
             if (nextStageIndex > currentStageIndex) {
               hasChanges = true;
               return {
-                pumpkin: {
-                  ...plot.pumpkin,
+                crop: {
+                  ...plot.crop,
                   stage: GROWTH_STAGES[nextStageIndex],
                   lastGrowthTime: now,
                 }
@@ -234,19 +324,17 @@ export const useFarm = create<FarmState>()(
       }
     },
     
-    getTotalPumpkinsByStage: () => {
+    getTotalCropsByStage: () => {
       const state = get();
-      const counts: Record<PumpkinStage, number> = {
-        seed: 0,
-        sprout: 0,
-        growing: 0,
-        mature: 0,
+      const counts: Record<CropType, Record<CropStage, number>> = {
+        pumpkin: { seed: 0, sprout: 0, growing: 0, mature: 0 },
+        corn: { seed: 0, sprout: 0, growing: 0, mature: 0 },
       };
       
       state.farmGrid.forEach(row => {
         row.forEach(plot => {
-          if (plot.pumpkin) {
-            counts[plot.pumpkin.stage]++;
+          if (plot.crop) {
+            counts[plot.crop.type][plot.crop.stage]++;
           }
         });
       });
@@ -254,28 +342,82 @@ export const useFarm = create<FarmState>()(
       return counts;
     },
     
-    sellPumpkin: () => {
+    sellCrop: (cropType: CropType) => {
       const state = get();
       
-      // Check if we have pumpkins to sell
-      if (state.playerInventory.harvestedPumpkins <= 0) {
+      // Check if we have crops to sell
+      if (state.playerInventory.harvestedCrops[cropType] <= 0) {
         return false;
       }
       
       set({
         playerInventory: {
           ...state.playerInventory,
-          harvestedPumpkins: state.playerInventory.harvestedPumpkins - 1,
+          harvestedCrops: {
+            ...state.playerInventory.harvestedCrops,
+            [cropType]: state.playerInventory.harvestedCrops[cropType] - 1,
+          },
         }
       });
       
-      console.log(`[Farm] Sold 1 pumpkin. Remaining: ${state.playerInventory.harvestedPumpkins - 1}`);
+      console.log(`[Farm] Sold 1 ${cropType}. Remaining: ${state.playerInventory.harvestedCrops[cropType] - 1}`);
       return true;
     },
     
     // Save/Load actions
     setFarmGrid: (grid: FarmPlot[][]) => {
       set({ farmGrid: grid });
+    },
+    
+    unlockCrop: (cropType: CropType) => {
+      const state = get();
+      
+      // Check if already unlocked
+      if (state.playerInventory.unlockedCrops[cropType]) {
+        return false;
+      }
+      
+      set({
+        playerInventory: {
+          ...state.playerInventory,
+          unlockedCrops: {
+            ...state.playerInventory.unlockedCrops,
+            [cropType]: true,
+          },
+        }
+      });
+      
+      console.log(`[Farm] Unlocked ${cropType} crop!`);
+      return true;
+    },
+    
+    purchaseSeeds: (cropType: CropType, quantity: number) => {
+      const state = get();
+      
+      set({
+        playerInventory: {
+          ...state.playerInventory,
+          seeds: {
+            ...state.playerInventory.seeds,
+            [cropType]: state.playerInventory.seeds[cropType] + quantity,
+          },
+        }
+      });
+      
+      console.log(`[Farm] Purchased ${quantity} ${cropType} seeds`);
+      return true;
+    },
+    
+    setSelectedCropType: (cropType: CropType) => {
+      const state = get();
+      if (state.playerInventory.unlockedCrops[cropType]) {
+        set({
+          playerInventory: {
+            ...state.playerInventory,
+            selectedCropType: cropType,
+          }
+        });
+      }
     },
     
     setInventory: (inventory: PlayerInventory) => {

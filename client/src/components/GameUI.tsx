@@ -5,13 +5,13 @@ import { useIsMobile } from "../hooks/use-is-mobile";
 import { useIsTablet } from "../hooks/use-is-tablet";
 
 export default function GameUI() {
-  const { playerInventory, getTotalPumpkinsByStage } = useFarm();
+  const { playerInventory, getTotalCropsByStage, setSelectedCropType } = useFarm();
   const { isMuted, toggleMute } = useAudio();
   const { equipment } = useEquipment();
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
 
-  const pumpkinCounts = getTotalPumpkinsByStage();
+  const cropCounts = getTotalCropsByStage();
   const criticalEquipment = equipment.filter(item => item.durability < 30).length;
 
   return (
@@ -36,23 +36,44 @@ export default function GameUI() {
         fontSize: isMobile ? '12px' : '14px',
         maxWidth: isMobile ? '180px' : (isTablet ? '240px' : '300px'),
       }}>
-        <h3 style={{ margin: '0 0 8px 0', fontSize: isMobile ? '13px' : (isTablet ? '16px' : '18px') }}>🎃 Pumpkin Farm</h3>
+        <h3 style={{ margin: '0 0 8px 0', fontSize: isMobile ? '13px' : (isTablet ? '16px' : '18px') }}>🎃 Multi-Crop Farm</h3>
         
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
           <div>
-            <strong>Seeds:</strong> {playerInventory.seeds}
+            <strong>🎃 Seeds:</strong> {playerInventory.seeds.pumpkin}
           </div>
           <div>
-            <strong>Harvested:</strong> {playerInventory.harvestedPumpkins}
+            <strong>🎃 Harvested:</strong> {playerInventory.harvestedCrops.pumpkin}
           </div>
+          {playerInventory.unlockedCrops.corn && (
+            <>
+              <div>
+                <strong>🌽 Seeds:</strong> {playerInventory.seeds.corn}
+              </div>
+              <div>
+                <strong>🌽 Harvested:</strong> {playerInventory.harvestedCrops.corn}
+              </div>
+            </>
+          )}
         </div>
         
         {!isMobile && (
           <div style={{ marginTop: '10px', fontSize: '12px', color: '#ccc' }}>
-            <div><span style={{ color: '#8B4513' }}>●</span> Seeds: {pumpkinCounts.seed}</div>
-            <div><span style={{ color: '#32CD32' }}>●</span> Sprouts: {pumpkinCounts.sprout}</div>
-            <div><span style={{ color: '#228B22' }}>●</span> Growing: {pumpkinCounts.growing}</div>
-            <div><span style={{ color: '#FF8C00' }}>●</span> Mature: {pumpkinCounts.mature}</div>
+            <div style={{ marginBottom: '6px', fontWeight: 'bold', color: '#FF8C00' }}>🎃 Pumpkins:</div>
+            <div><span style={{ color: '#8B4513' }}>●</span> Seeds: {cropCounts.pumpkin.seed}</div>
+            <div><span style={{ color: '#32CD32' }}>●</span> Sprouts: {cropCounts.pumpkin.sprout}</div>
+            <div><span style={{ color: '#228B22' }}>●</span> Growing: {cropCounts.pumpkin.growing}</div>
+            <div><span style={{ color: '#FF8C00' }}>●</span> Mature: {cropCounts.pumpkin.mature}</div>
+            
+            {playerInventory.unlockedCrops.corn && (
+              <>
+                <div style={{ marginTop: '8px', marginBottom: '6px', fontWeight: 'bold', color: '#FFD700' }}>🌽 Corn:</div>
+                <div><span style={{ color: '#8B4513' }}>●</span> Seeds: {cropCounts.corn.seed}</div>
+                <div><span style={{ color: '#90EE90' }}>●</span> Sprouts: {cropCounts.corn.sprout}</div>
+                <div><span style={{ color: '#32CD32' }}>●</span> Growing: {cropCounts.corn.growing}</div>
+                <div><span style={{ color: '#FFD700' }}>●</span> Mature: {cropCounts.corn.mature}</div>
+              </>
+            )}
           </div>
         )}
         

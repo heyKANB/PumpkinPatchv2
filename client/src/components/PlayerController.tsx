@@ -15,12 +15,12 @@ interface PlayerControllerProps {
 export default function PlayerController({ mobileMovement, mobileInteract, onPositionChange }: PlayerControllerProps) {
   const playerRef = useRef<THREE.Mesh>(null);
   const [, getKeys] = useKeyboardControls();
-  const { plantPumpkin, playerInventory } = useFarm();
+  const { plantCrop, playerInventory } = useFarm();
   const { playHit } = useAudio();
   const [lastInteractTime, setLastInteractTime] = useState(0);
 
   const handlePlanting = () => {
-    if (!playerRef.current || playerInventory.seeds <= 0) return;
+    if (!playerRef.current || playerInventory.seeds[playerInventory.selectedCropType] <= 0) return;
 
     const now = Date.now();
     if (now - lastInteractTime < 500) return; // Prevent spam clicking
@@ -31,7 +31,7 @@ export default function PlayerController({ mobileMovement, mobileInteract, onPos
     
     // Check if position is within farm grid
     if (gridX >= 0 && gridX < FARM_SIZE && gridZ >= 0 && gridZ < FARM_SIZE) {
-      const success = plantPumpkin(gridZ, gridX);
+      const success = plantCrop(gridZ, gridX);
       if (success) {
         playHit();
         setLastInteractTime(now);
@@ -81,7 +81,7 @@ export default function PlayerController({ mobileMovement, mobileInteract, onPos
     }
     
     // Planting interaction - keyboard or mobile
-    if ((interact || mobileInteract) && playerInventory.seeds > 0) {
+    if ((interact || mobileInteract) && playerInventory.seeds[playerInventory.selectedCropType] > 0) {
       handlePlanting();
     }
     

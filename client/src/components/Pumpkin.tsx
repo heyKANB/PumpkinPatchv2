@@ -72,13 +72,18 @@ export default function Pumpkin({ stage, position, plantedTime, rowIndex, colInd
         castShadow
         receiveShadow
         userData={{
-          isPumpkin: true,
+          isCrop: true,
+          cropType,
           stage,
           row: rowIndex,
           col: colIndex
         }}
       >
-        <sphereGeometry args={stage === 'mature' ? [0.5, 8, 6] : [0.3]} />
+        {cropType === 'corn' ? (
+          <cylinderGeometry args={stage === 'mature' ? [0.1, 0.3, 1.5, 8] : [0.05, 0.15, stage === 'growing' ? 0.8 : 0.4, 6]} />
+        ) : (
+          <sphereGeometry args={stage === 'mature' ? [0.5, 8, 6] : [0.3]} />
+        )}
         <meshLambertMaterial 
           color={finalColor}
           transparent={isTransparent}
@@ -86,8 +91,8 @@ export default function Pumpkin({ stage, position, plantedTime, rowIndex, colInd
         />
       </mesh>
       
-      {/* Stem for mature pumpkins */}
-      {stage === 'mature' && (
+      {/* Stem for mature pumpkins only */}
+      {stage === 'mature' && cropType === 'pumpkin' && (
         <mesh position={[position[0], position[1] + 0.5, position[2]]}>
           <cylinderGeometry args={[0.05, 0.08, 0.2]} />
           <meshLambertMaterial color="#8B4513" />

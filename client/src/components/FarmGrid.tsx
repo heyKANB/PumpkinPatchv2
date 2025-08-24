@@ -1,6 +1,6 @@
 import { useFarm } from "../lib/stores/useFarm";
 import { FARM_SIZE } from "../lib/constants";
-import Pumpkin from "./Pumpkin";
+import Crop from "./Pumpkin"; // Renamed component
 
 export default function FarmGrid() {
   const { farmGrid } = useFarm();
@@ -15,7 +15,7 @@ export default function FarmGrid() {
           return (
             <group key={`${rowIndex}-${colIndex}`} position={[x, 0, z]}>
               {/* Plot marker - visible when empty */}
-              {!plot.pumpkin && (
+              {!plot.crop && (
                 <mesh position={[0, 0.01, 0]}>
                   <circleGeometry args={[0.8]} />
                   <meshBasicMaterial 
@@ -26,12 +26,13 @@ export default function FarmGrid() {
                 </mesh>
               )}
               
-              {/* Pumpkin if planted */}
-              {plot.pumpkin && (
-                <Pumpkin
-                  stage={plot.pumpkin.stage}
+              {/* Crop if planted */}
+              {plot.crop && (
+                <Crop
+                  cropType={plot.crop.type}
+                  stage={plot.crop.stage}
                   position={[0, 0.1, 0]}
-                  plantedTime={plot.pumpkin.plantedTime}
+                  plantedTime={plot.crop.plantedTime}
                   rowIndex={rowIndex}
                   colIndex={colIndex}
                 />
