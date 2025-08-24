@@ -32,6 +32,7 @@ interface FarmState {
   initializeFarm: () => void;
   plantPumpkin: (row: number, col: number) => boolean;
   harvestPumpkin: (row: number, col: number) => boolean;
+  sellPumpkin: () => boolean;
   updateGrowth: () => void;
   getTotalPumpkinsByStage: () => Record<PumpkinStage, number>;
   
@@ -251,6 +252,25 @@ export const useFarm = create<FarmState>()(
       });
       
       return counts;
+    },
+    
+    sellPumpkin: () => {
+      const state = get();
+      
+      // Check if we have pumpkins to sell
+      if (state.playerInventory.harvestedPumpkins <= 0) {
+        return false;
+      }
+      
+      set({
+        playerInventory: {
+          ...state.playerInventory,
+          harvestedPumpkins: state.playerInventory.harvestedPumpkins - 1,
+        }
+      });
+      
+      console.log(`[Farm] Sold 1 pumpkin. Remaining: ${state.playerInventory.harvestedPumpkins - 1}`);
+      return true;
     },
     
     // Save/Load actions

@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, MapPin, ChefHat, Sprout, Lock } from 'lucide-react';
+import { useXP } from '../lib/stores/useXP';
 
 interface LocationMenuProps {
   isOpen: boolean;
@@ -8,12 +9,17 @@ interface LocationMenuProps {
 }
 
 export default function LocationMenu({ isOpen, onClose, onSelectLocation }: LocationMenuProps) {
+  const { level } = useXP();
+  
   if (!isOpen) return null;
 
   const handleLocationClick = (location: string, isLocked: boolean = false) => {
     if (isLocked) return;
     onSelectLocation(location);
   };
+
+  // Check if marketplace is unlocked (level 3 or higher)
+  const isMarketplaceUnlocked = level >= 3;
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
@@ -48,22 +54,36 @@ export default function LocationMenu({ isOpen, onClose, onSelectLocation }: Loca
             </div>
           </button>
 
-          {/* Marketplace Option - Locked */}
+          {/* Marketplace Option */}
           <button
-            onClick={() => handleLocationClick('marketplace', true)}
-            className="w-full bg-gray-700 text-gray-400 p-4 rounded-xl transition-all duration-200 flex items-center gap-4 border-2 border-gray-600 cursor-not-allowed relative overflow-hidden"
+            onClick={() => handleLocationClick('marketplace', !isMarketplaceUnlocked)}
+            className={`w-full p-4 rounded-xl transition-all duration-200 flex items-center gap-4 border-2 shadow-lg hover:shadow-xl transform ${
+              isMarketplaceUnlocked 
+                ? 'bg-orange-600 hover:bg-orange-700 text-white border-orange-500 hover:border-orange-400 hover:scale-105 cursor-pointer'
+                : 'bg-gray-700 text-gray-400 border-gray-600 cursor-not-allowed relative overflow-hidden'
+            }`}
           >
-            <div className="bg-gray-600 p-3 rounded-xl">
+            <div className={`p-3 rounded-xl ${
+              isMarketplaceUnlocked ? 'bg-orange-500' : 'bg-gray-600'
+            }`}>
               <MapPin className="w-8 h-8" />
             </div>
             <div className="text-left flex-1">
               <h3 className="text-xl font-bold">Marketplace</h3>
-              <p className="text-gray-300 text-sm">Buy and sell your goods</p>
+              <p className={`text-sm ${
+                isMarketplaceUnlocked ? 'text-orange-200' : 'text-gray-300'
+              }`}>
+                {isMarketplaceUnlocked ? 'Sell your pumpkins for coins' : `Unlocks at level 3 (you're level ${level})`}
+              </p>
             </div>
-            <div className="bg-yellow-600 p-2 rounded-full">
-              <Lock className="w-5 h-5 text-white" />
-            </div>
-            <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
+            {!isMarketplaceUnlocked && (
+              <>
+                <div className="bg-yellow-600 p-2 rounded-full">
+                  <Lock className="w-5 h-5 text-white" />
+                </div>
+                <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
+              </>
+            )}
           </button>
 
           {/* Kitchen Option - Locked */}
@@ -85,10 +105,13 @@ export default function LocationMenu({ isOpen, onClose, onSelectLocation }: Loca
           </button>
         </div>
 
-        {/* Coming Soon Notice */}
-        <div className="mt-6 p-4 bg-yellow-600/20 border border-yellow-600/50 rounded-xl">
-          <p className="text-yellow-200 text-sm text-center">
-            🔒 Marketplace and Kitchen coming soon in future updates!
+        {/* Progress Notice */}
+        <div className="mt-6 p-4 bg-blue-600/20 border border-blue-600/50 rounded-xl">
+          <p className="text-blue-200 text-sm text-center">
+            {isMarketplaceUnlocked 
+              ? '🎉 Marketplace unlocked! Sell your pumpkins for coins!'
+              : `🌱 Keep farming to reach level 3 and unlock the Marketplace! (Currently level ${level})`
+            }
           </p>
         </div>
       </div>

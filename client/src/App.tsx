@@ -15,6 +15,7 @@ import CoinCounter from "./components/CoinCounter";
 import SaveIndicator from "./components/SaveIndicator";
 import XPBar from "./components/XPBar";
 import LevelUpNotification from "./components/LevelUpNotification";
+import Marketplace from "./components/Marketplace";
 import { useEquipment } from "./lib/stores/useEquipment";
 import { useXP } from "./lib/stores/useXP";
 import { SaveSystem } from "./lib/saveSystem";
@@ -41,6 +42,7 @@ function App() {
   const [playerPosition, setPlayerPosition] = useState<[number, number, number]>([0, 0, 0]);
   const [shedMenuOpen, setShedMenuOpen] = useState(false);
   const [locationMenuOpen, setLocationMenuOpen] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState<'field' | 'marketplace'>('field');
   // Use equipment store state instead of local state
   const [maintenanceGameActive, setMaintenanceGameActive] = useState(false);
   const { setHitSound, setSuccessSound } = useAudio();
@@ -50,17 +52,18 @@ function App() {
 
   // Listen for level ups
   useEffect(() => {
+    let prevLevel = level;
     const unsubscribe = useXP.subscribe(
-      (state) => state.level,
-      (level: number, prevLevel: number) => {
-        if (level > prevLevel && level > 1) {
-          setShowLevelUp(level);
+      (state) => {
+        if (state.level > prevLevel && state.level > 1) {
+          setShowLevelUp(state.level);
         }
+        prevLevel = state.level;
       }
     );
 
     return unsubscribe;
-  }, []);
+  }, [level]);
   const isMobile = useIsMobile();
   const deviceInfo = useDeviceInfo();
 
@@ -148,10 +151,19 @@ function App() {
   const handleLocationSelect = (location: string) => {
     console.log(`Location selected: ${location}`);
     if (location === 'field') {
+      setCurrentLocation('field');
       setLocationMenuOpen(false);
-      // Player is already in the field, just close menu
-    } else if (location === 'marketplace' || location === 'kitchen') {
-      // These are locked for now, do nothing
+    } else if (location === 'marketplace') {
+      // Check if marketplace is unlocked (level 3+)
+      if (level >= 3) {
+        setCurrentLocation('marketplace');
+        setLocationMenuOpen(false);
+        console.log('Navigating to marketplace');
+      } else {
+        console.log('Marketplace is locked - need level 3');
+      }
+    } else if (location === 'kitchen') {
+      // Kitchen is still locked for future updates
       console.log(`${location} is locked for future updates`);
     }
   };
@@ -182,76 +194,83 @@ function App() {
         }}>
       {showCanvas && (
         <>
-          <KeyboardControls map={controls}>
-            <ResponsiveCanvas
-              mobileMovement={mobileMovement}
-              mobileInteract={mobileInteract}
-              onTouchMove={handleTouchMove}
-              playerPosition={playerPosition}
-              onPlayerPositionChange={setPlayerPosition}
-              onShedEntry={handleShedEntry}
-              onGateEntry={handleGateEntry}
-            />
-          </KeyboardControls>
-          
-          {/* Game UI overlay - rendered outside Canvas */}
-          <GameUI />
-          
-          {/* Coin Counter */}
-          <CoinCounter />
-          
-          {/* XP Bar */}
-          <XPBar />
-          
-          {/* XP Gain Notifications */}
+          {/* Render marketplace or field based on current location */}
+          {currentLocation === 'marketplace' ? (
+            <Marketplace onReturnToField={() => setCurrentLocation('field')} />
+          ) : (
+            <>
+              <KeyboardControls map={controls}>
+                <ResponsiveCanvas
+                  mobileMovement={mobileMovement}
+                  mobileInteract={mobileInteract}
+                  onTouchMove={handleTouchMove}
+                  playerPosition={playerPosition}
+                  onPlayerPositionChange={setPlayerPosition}
+                  onShedEntry={handleShedEntry}
+                  onGateEntry={handleGateEntry}
+                />
+              </KeyboardControls>
+              
+              {/* Game UI overlay - rendered outside Canvas */}
+              <GameUI />
+              
+              {/* Coin Counter */}
+              <CoinCounter />
+              
+              {/* XP Bar */}
+              <XPBar />
+              
+              {/* XP Gain Notifications */}
 
-          
-          {/* Mobile Controls - only shown on mobile */}
-          {isMobile && (
-            <MobileControls 
-              onMove={handleMobileMove}
-              onInteract={handleMobileInteract}
-              onDragMove={handleDragMove}
-            />
-          )}
-          
-          {/* Equipment Shed Menu */}
-          {shedMenuOpen && (
-            <EquipmentShedMenu
-              onClose={handleShedMenuClose}
-              onSelectEquipment={handleEquipmentSelect}
-            />
-          )}
-          
-          {/* Maintenance Mini-Game */}
-          {maintenanceGameActive && storeSelectedEquipment && (
-            <MaintenanceMiniGame
-              equipment={storeSelectedEquipment}
-              onComplete={handleMaintenanceComplete}
-              onClose={handleMaintenanceClose}
-            />
-          )}
+              
+              {/* Mobile Controls - only shown on mobile */}
+              {isMobile && (
+                <MobileControls 
+                  onMove={handleMobileMove}
+                  onInteract={handleMobileInteract}
+                  onDragMove={handleDragMove}
+                />
+              )}
+              
+              {/* Equipment Shed Menu */}
+              {shedMenuOpen && (
+                <EquipmentShedMenu
+                  onClose={handleShedMenuClose}
+                  onSelectEquipment={handleEquipmentSelect}
+                />
+              )}
+              
+              {/* Maintenance Mini-Game */}
+              {maintenanceGameActive && storeSelectedEquipment && (
+                <MaintenanceMiniGame
+                  equipment={storeSelectedEquipment}
+                  onComplete={handleMaintenanceComplete}
+                  onClose={handleMaintenanceClose}
+                />
+              )}
 
-          {/* Location Menu */}
-          <LocationMenu
-            isOpen={locationMenuOpen}
-            onClose={handleLocationMenuClose}
-            onSelectLocation={handleLocationSelect}
-          />
-          
-          {/* Save Indicator */}
-          <SaveIndicator />
-          
-          {/* Level Up Notification */}
-          {showLevelUp && (
-            <LevelUpNotification 
-              level={showLevelUp}
-              onComplete={() => setShowLevelUp(null)}
-            />
+              {/* Location Menu */}
+              <LocationMenu
+                isOpen={locationMenuOpen}
+                onClose={handleLocationMenuClose}
+                onSelectLocation={handleLocationSelect}
+              />
+              
+              {/* Save Indicator */}
+              <SaveIndicator />
+              
+              {/* Level Up Notification */}
+              {showLevelUp && (
+                <LevelUpNotification 
+                  level={showLevelUp}
+                  onComplete={() => setShowLevelUp(null)}
+                />
+              )}
+              
+              {/* Debug info for development */}
+              <MobileDebugInfo />
+            </>
           )}
-          
-          {/* Debug info for development */}
-          <MobileDebugInfo />
         </>
       )}
         </div>
