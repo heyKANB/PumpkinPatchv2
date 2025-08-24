@@ -7,7 +7,7 @@ interface MarketplaceProps {
   onReturnToField: () => void;
 }
 
-const PUMPKIN_PRICE = 25; // Coins per pumpkin
+const PUMPKIN_PRICE = 5; // Coins per pumpkin
 
 export default function Marketplace({ onReturnToField }: MarketplaceProps) {
   const { playerInventory, sellPumpkin } = useFarm();
