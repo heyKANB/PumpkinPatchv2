@@ -9,10 +9,7 @@ interface SaveData {
   timestamp: number;
   farm: {
     farmGrid: any[][];
-    inventory: {
-      seeds: number;
-      harvestedPumpkins: number;
-    };
+    inventory: any; // Allow both old and new formats
     isFirstPlant: boolean;
     isFirstHarvest: boolean;
     consecutiveHarvests: number;
@@ -52,7 +49,7 @@ export class SaveSystem {
         timestamp: Date.now(),
         farm: {
           farmGrid: farmState.farmGrid,
-          inventory: farmState.playerInventory,
+          inventory: farmState.playerInventory as any,
           isFirstPlant: farmState.isFirstPlant,
           isFirstHarvest: farmState.isFirstHarvest,
           consecutiveHarvests: farmState.consecutiveHarvests,
@@ -115,10 +112,49 @@ export class SaveSystem {
       if (saveData.farm) {
         const farmStore = useFarm.getState();
         if (saveData.farm.farmGrid) {
-          farmStore.setFarmGrid(saveData.farm.farmGrid);
+          // Migration: Convert old farmGrid format (pumpkin) to new format (crop)
+          const migratedGrid = saveData.farm.farmGrid.map((row: any[]) =>
+            row.map((plot: any) => {
+              if (plot.pumpkin) {
+                return {
+                  crop: {
+                    type: 'pumpkin',
+                    stage: plot.pumpkin.stage,
+                    plantedTime: plot.pumpkin.plantedTime,
+                    lastGrowthTime: plot.pumpkin.lastGrowthTime,
+                  }
+                };
+              }
+              return { crop: null };
+            })
+          );
+          farmStore.setFarmGrid(migratedGrid as any);
         }
         if (saveData.farm.inventory) {
-          farmStore.setInventory(saveData.farm.inventory);
+          // Migration: Convert old inventory format to new multi-crop format
+          let inventory = saveData.farm.inventory;
+          
+          // Check if this is old format (seeds as number, harvestedPumpkins as number)
+          if (typeof (inventory as any).seeds === 'number') {
+            console.log('Migrating old save data to new multi-crop format...');
+            inventory = {
+              seeds: {
+                pumpkin: (inventory as any).seeds || 0,
+                corn: 0,
+              },
+              harvestedCrops: {
+                pumpkin: (inventory as any).harvestedPumpkins || 0,
+                corn: 0,
+              },
+              unlockedCrops: {
+                pumpkin: true,
+                corn: false,
+              },
+              selectedCropType: 'pumpkin' as const,
+            };
+          }
+          
+          farmStore.setInventory(inventory as any);
         }
         // Restore XP-related farm state
         if (saveData.farm.isFirstPlant !== undefined || 
