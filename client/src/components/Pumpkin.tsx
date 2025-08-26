@@ -1,27 +1,26 @@
 import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { useFarm } from "../lib/stores/useFarm";
+import { useFarm, CropType, CropStage } from "../lib/stores/useFarm";
 import { useAudio } from "../lib/stores/useAudio";
 import * as THREE from "three";
 
-export type PumpkinStage = 'seed' | 'sprout' | 'growing' | 'mature';
-
 interface PumpkinProps {
-  stage: PumpkinStage;
+  cropType: CropType;
+  stage: CropStage;
   position: [number, number, number];
   plantedTime: number;
   rowIndex: number;
   colIndex: number;
 }
 
-export default function Pumpkin({ stage, position, plantedTime, rowIndex, colIndex }: PumpkinProps) {
+export default function Pumpkin({ cropType, stage, position, plantedTime, rowIndex, colIndex }: PumpkinProps) {
   const meshRef = useRef<THREE.Mesh>(null);
-  const { harvestPumpkin } = useFarm();
+  const { harvestCrop } = useFarm();
   const { playSuccess } = useAudio();
   const [hovered, setHovered] = useState(false);
   const [bobOffset] = useState(Math.random() * Math.PI * 2);
 
-  // Gentle bobbing animation for mature pumpkins
+  // Gentle bobbing animation for mature crops
   useFrame((state) => {
     if (meshRef.current && stage === 'mature') {
       meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 2 + bobOffset) * 0.02;
@@ -31,7 +30,7 @@ export default function Pumpkin({ stage, position, plantedTime, rowIndex, colInd
   const handleClick = (e: any) => {
     e.stopPropagation();
     if (stage === 'mature') {
-      harvestPumpkin(rowIndex, colIndex);
+      harvestCrop(rowIndex, colIndex);
       playSuccess();
     }
   };
@@ -47,12 +46,23 @@ export default function Pumpkin({ stage, position, plantedTime, rowIndex, colInd
   };
 
   const getColor = () => {
-    switch (stage) {
-      case 'seed': return '#8B4513';
-      case 'sprout': return '#32CD32';
-      case 'growing': return '#228B22';
-      case 'mature': return '#FF8C00';
-      default: return '#8B4513';
+    if (cropType === 'corn') {
+      switch (stage) {
+        case 'seed': return '#8B4513';
+        case 'sprout': return '#90EE90';
+        case 'growing': return '#32CD32';
+        case 'mature': return '#FFD700';
+        default: return '#8B4513';
+      }
+    } else {
+      // Pumpkin colors
+      switch (stage) {
+        case 'seed': return '#8B4513';
+        case 'sprout': return '#32CD32';
+        case 'growing': return '#228B22';
+        case 'mature': return '#FF8C00';
+        default: return '#8B4513';
+      }
     }
   };
 
