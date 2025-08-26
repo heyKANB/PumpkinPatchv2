@@ -15,17 +15,35 @@ const LevelUpNotification: React.FC<LevelUpNotificationProps> = ({ level, onComp
     // Hide after 4 seconds
     const hideTimer = setTimeout(() => {
       setVisible(false);
-      setTimeout(onComplete, 500); // Wait for animation to complete
+      // Call onComplete after animation completes
+      setTimeout(() => {
+        if (onComplete) {
+          onComplete();
+        }
+      }, 500);
     }, 4000);
 
     return () => {
       clearTimeout(showTimer);
       clearTimeout(hideTimer);
     };
-  }, [onComplete]);
+  }, []); // Remove onComplete dependency to prevent re-runs
+
+  const handleDismiss = () => {
+    setVisible(false);
+    setTimeout(() => {
+      if (onComplete) {
+        onComplete();
+      }
+    }, 500);
+  };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none">
+    <div 
+      className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-auto"
+      onClick={handleDismiss}
+      style={{ cursor: 'pointer' }}
+    >
       <div
         className={`
           bg-gradient-to-r from-yellow-500 to-orange-500 
@@ -37,6 +55,7 @@ const LevelUpNotification: React.FC<LevelUpNotificationProps> = ({ level, onComp
         style={{
           boxShadow: visible ? '0 0 50px rgba(255, 193, 7, 0.5)' : 'none',
         }}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="text-center">
           <div className="text-5xl md:text-6xl mb-2">🎉</div>
