@@ -145,7 +145,7 @@ export default function MobileControls({ onMove, onInteract, onDragMove }: Mobil
             width: '60px',
             height: '60px',
             borderRadius: '50%',
-            backgroundColor: playerInventory.seeds > 0 ? 'rgba(76, 175, 80, 0.9)' : 'rgba(128, 128, 128, 0.5)',
+            backgroundColor: playerInventory.seeds[playerInventory.selectedCropType] > 0 ? 'rgba(76, 175, 80, 0.9)' : 'rgba(128, 128, 128, 0.5)',
             border: '3px solid rgba(255, 255, 255, 0.8)',
             color: 'white',
             fontSize: '24px',
@@ -170,7 +170,7 @@ export default function MobileControls({ onMove, onInteract, onDragMove }: Mobil
           fontFamily: 'Inter, sans-serif',
           fontWeight: 'bold',
         }}>
-          {playerInventory.seeds}
+          {playerInventory.seeds[playerInventory.selectedCropType]}
         </div>
       </div>
     </div>
