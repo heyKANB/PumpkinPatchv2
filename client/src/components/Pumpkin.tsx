@@ -54,6 +54,14 @@ export default function Pumpkin({ cropType, stage, position, plantedTime, rowInd
         case 'mature': return '#FFD700';
         default: return '#8B4513';
       }
+    } else if (cropType === 'wheat') {
+      switch (stage) {
+        case 'seed': return '#8B4513';
+        case 'sprout': return '#9ACD32';
+        case 'growing': return '#DAA520';
+        case 'mature': return '#F4A460';
+        default: return '#8B4513';
+      }
     } else {
       // Pumpkin colors
       switch (stage) {
@@ -91,6 +99,8 @@ export default function Pumpkin({ cropType, stage, position, plantedTime, rowInd
       >
         {cropType === 'corn' ? (
           <cylinderGeometry args={stage === 'mature' ? [0.1, 0.3, 1.5, 8] : [0.05, 0.15, stage === 'growing' ? 0.8 : 0.4, 6]} />
+        ) : cropType === 'wheat' ? (
+          <cylinderGeometry args={stage === 'mature' ? [0.05, 0.12, 1.8, 6] : [0.02, 0.08, stage === 'growing' ? 1.2 : 0.3, 4]} />
         ) : (
           <sphereGeometry args={stage === 'mature' ? [0.5, 8, 6] : [0.3]} />
         )}
@@ -109,12 +119,34 @@ export default function Pumpkin({ cropType, stage, position, plantedTime, rowInd
         </mesh>
       )}
       
+      {/* Wheat heads for mature wheat */}
+      {stage === 'mature' && cropType === 'wheat' && (
+        <mesh position={[position[0], position[1] + 1.0, position[2]]}>
+          <boxGeometry args={[0.15, 0.3, 0.08]} />
+          <meshLambertMaterial color="#DEB887" />
+        </mesh>
+      )}
+      
       {/* Leaves for growing stages */}
-      {(stage === 'sprout' || stage === 'growing') && (
+      {(stage === 'sprout' || stage === 'growing') && cropType !== 'wheat' && (
         <mesh position={[position[0], position[1] + 0.3, position[2]]}>
           <cylinderGeometry args={[0.1, 0.1, 0.6]} />
           <meshLambertMaterial color="#32CD32" />
         </mesh>
+      )}
+      
+      {/* Wheat blade leaves */}
+      {(stage === 'sprout' || stage === 'growing') && cropType === 'wheat' && (
+        <>
+          <mesh position={[position[0] + 0.1, position[1] + 0.2, position[2]]}>
+            <boxGeometry args={[0.02, stage === 'growing' ? 0.8 : 0.4, 0.01]} />
+            <meshLambertMaterial color="#9ACD32" />
+          </mesh>
+          <mesh position={[position[0] - 0.1, position[1] + 0.25, position[2]]}>
+            <boxGeometry args={[0.02, stage === 'growing' ? 0.7 : 0.35, 0.01]} />
+            <meshLambertMaterial color="#9ACD32" />
+          </mesh>
+        </>
       )}
       
       {/* Harvest indicator for mature pumpkins */}
