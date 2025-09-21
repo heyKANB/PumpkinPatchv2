@@ -3,7 +3,7 @@ import { subscribeWithSelector } from "zustand/middleware";
 import { FARM_SIZE } from "../constants";
 import { useXP, XP_ACTIVITIES } from "./useXP";
 
-export type CropType = 'pumpkin' | 'corn';
+export type CropType = 'pumpkin' | 'corn' | 'wheat';
 export type CropStage = 'seed' | 'sprout' | 'growing' | 'mature';
 
 export interface Crop {
@@ -20,16 +20,19 @@ export interface FarmPlot {
 export interface CropSeeds {
   pumpkin: number;
   corn: number;
+  wheat: number;
 }
 
 export interface HarvestedCrops {
   pumpkin: number;
   corn: number;
+  wheat: number;
 }
 
 export interface UnlockedCrops {
   pumpkin: boolean;
   corn: boolean;
+  wheat: boolean;
 }
 
 export interface PlayerInventory {
@@ -76,26 +79,30 @@ const GROWTH_STAGES: CropStage[] = ['seed', 'sprout', 'growing', 'mature'];
 
 // Growth times per stage in milliseconds
 const CROP_GROWTH_TIMES: Record<CropType, number> = {
-  pumpkin: 5000, // 5 seconds per stage
-  corn: 12000,   // 12 seconds per stage (considerably longer)
+  pumpkin: 5000,   // 5 seconds per stage
+  corn: 12000,     // 12 seconds per stage (considerably longer)
+  wheat: 900000,   // 15 minutes per stage (1 hour total)
 };
 
 // Crop unlock requirements
 export const CROP_UNLOCK_LEVELS: Record<CropType, number> = {
   pumpkin: 1,
   corn: 5,
+  wheat: 10,
 };
 
 // Crop unlock costs
 export const CROP_UNLOCK_COSTS: Record<CropType, number> = {
   pumpkin: 0,  // Free
   corn: 50,    // 50 coins
+  wheat: 100,  // 100 coins
 };
 
 // Seed costs
 export const SEED_COSTS: Record<CropType, number> = {
   pumpkin: 0,  // Free (as before)
   corn: 2,     // 2 coins each
+  wheat: 5,    // 5 coins each
 };
 
 export const useFarm = create<FarmState>()(
@@ -105,14 +112,17 @@ export const useFarm = create<FarmState>()(
       seeds: {
         pumpkin: 10, // Start with 10 pumpkin seeds
         corn: 0,
+        wheat: 0,
       },
       harvestedCrops: {
         pumpkin: 0,
         corn: 0,
+        wheat: 0,
       },
       unlockedCrops: {
         pumpkin: true,  // Pumpkins are unlocked from start
         corn: false,    // Corn needs to be unlocked
+        wheat: false,   // Wheat needs to be unlocked
       },
       selectedCropType: 'pumpkin' as CropType,
     },
@@ -128,14 +138,17 @@ export const useFarm = create<FarmState>()(
           seeds: {
             pumpkin: 10,
             corn: 0,
+            wheat: 0,
           },
           harvestedCrops: {
             pumpkin: 0,
             corn: 0,
+            wheat: 0,
           },
           unlockedCrops: {
             pumpkin: true,
             corn: false,
+            wheat: false,
           },
           selectedCropType: 'pumpkin' as CropType,
         },
@@ -329,6 +342,7 @@ export const useFarm = create<FarmState>()(
       const counts: Record<CropType, Record<CropStage, number>> = {
         pumpkin: { seed: 0, sprout: 0, growing: 0, mature: 0 },
         corn: { seed: 0, sprout: 0, growing: 0, mature: 0 },
+        wheat: { seed: 0, sprout: 0, growing: 0, mature: 0 },
       };
       
       state.farmGrid.forEach(row => {
