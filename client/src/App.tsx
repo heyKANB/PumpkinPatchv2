@@ -24,6 +24,7 @@ import PrivacyPage from "./pages/privacy";
 import TermsPage from "./pages/terms";
 import { useIsMobile } from "./hooks/use-is-mobile";
 import { useDeviceInfo } from "./hooks/use-device-info";
+import WebGLErrorBoundary from "./components/WebGLErrorBoundary";
 
 // Define control keys for the farming game
 const controls = [
@@ -199,17 +200,19 @@ function App() {
             <Marketplace onReturnToField={() => setCurrentLocation('field')} />
           ) : (
             <>
-              <KeyboardControls map={controls}>
-                <ResponsiveCanvas
-                  mobileMovement={mobileMovement}
-                  mobileInteract={mobileInteract}
-                  onTouchMove={handleTouchMove}
-                  playerPosition={playerPosition}
-                  onPlayerPositionChange={setPlayerPosition}
-                  onShedEntry={handleShedEntry}
-                  onGateEntry={handleGateEntry}
-                />
-              </KeyboardControls>
+              <WebGLErrorBoundary>
+                <KeyboardControls map={controls}>
+                  <ResponsiveCanvas
+                    mobileMovement={mobileMovement}
+                    mobileInteract={mobileInteract}
+                    onTouchMove={handleTouchMove}
+                    playerPosition={playerPosition}
+                    onPlayerPositionChange={setPlayerPosition}
+                    onShedEntry={handleShedEntry}
+                    onGateEntry={handleGateEntry}
+                  />
+                </KeyboardControls>
+              </WebGLErrorBoundary>
               
               {/* Game UI overlay - rendered outside Canvas */}
               <GameUI />
