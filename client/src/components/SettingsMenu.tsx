@@ -116,7 +116,12 @@ export default function SettingsMenu({ isOpen, onClose }: SettingsMenuProps) {
         {/* Tab Navigation */}
         <div className="flex border-b-2 border-gray-200">
           <button
-            onClick={() => setActiveTab('appearance')}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('[Settings] Appearance tab clicked');
+              setActiveTab('appearance');
+            }}
             className={`flex-1 py-3 px-4 font-medium transition-colors ${
               activeTab === 'appearance'
                 ? 'bg-green-100 text-green-700 border-b-2 border-green-500'
@@ -127,7 +132,9 @@ export default function SettingsMenu({ isOpen, onClose }: SettingsMenuProps) {
             Appearance
           </button>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               console.log('[Settings] Shop tab clicked');
               setActiveTab('shop');
             }}
@@ -141,7 +148,12 @@ export default function SettingsMenu({ isOpen, onClose }: SettingsMenuProps) {
             Shop ({coins}🪙)
           </button>
           <button
-            onClick={() => setActiveTab('game')}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('[Settings] Game tab clicked');
+              setActiveTab('game');
+            }}
             className={`flex-1 py-3 px-4 font-medium transition-colors ${
               activeTab === 'game'
                 ? 'bg-green-100 text-green-700 border-b-2 border-green-500'
