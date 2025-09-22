@@ -1,7 +1,7 @@
 {
   "name": "Pumpkin Farm 3D",
   "short_name": "PumpkinFarm3D",
-  "version": "3.0.0",
+  "version": "3.9.0",
   "description": "A 3D pumpkin farming simulation game with immersive touch controls",
   "start_url": "/",
   "display": "fullscreen",
