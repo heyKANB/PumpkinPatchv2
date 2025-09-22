@@ -9,14 +9,14 @@ interface AvatarRendererProps {
 }
 
 export default function AvatarRenderer({ position = [0, 0, 0] }: AvatarRendererProps) {
-  const { avatar, name } = usePlayerAppearance();
+  const { avatar, name, getVisibleSlots } = usePlayerAppearance();
   const { colors, equipped } = avatar;
 
   // Get visible slots (slots not hidden by other equipped items)
-  const visibleSlots = usePlayerAppearance(state => state.getVisibleSlots());
+  const visibleSlots = React.useMemo(() => getVisibleSlots(), [equipped]);
 
   // Render equipped items for visible slots
-  const renderEquippedItem = (slot: AvatarSlot) => {
+  const renderEquippedItem = React.useCallback((slot: AvatarSlot) => {
     const itemId = equipped[slot];
     
     if (!itemId || !visibleSlots.includes(slot)) {
@@ -46,7 +46,7 @@ export default function AvatarRenderer({ position = [0, 0, 0] }: AvatarRendererP
         {item.render({ colors })}
       </group>
     );
-  };
+  }, [equipped, visibleSlots, position, colors]);
 
   return (
     <group position={position}>
@@ -63,7 +63,10 @@ export default function AvatarRenderer({ position = [0, 0, 0] }: AvatarRendererP
       </mesh>
 
       {/* Render all equipped cosmetic items */}
-      {(Object.keys(equipped) as AvatarSlot[]).map(slot => renderEquippedItem(slot))}
+      {React.useMemo(() => 
+        (Object.keys(equipped) as AvatarSlot[]).map(slot => renderEquippedItem(slot)),
+        [equipped, renderEquippedItem]
+      )}
 
       {/* Player name display (optional, for multiplayer or debugging) */}
       {name && name !== 'Farmer' && (
