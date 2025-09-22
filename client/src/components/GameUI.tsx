@@ -55,6 +55,90 @@ export default function GameUI() {
               </div>
             </>
           )}
+          {playerInventory.unlockedCrops.wheat && (
+            <>
+              <div>
+                <strong>🌾 Seeds:</strong> {playerInventory.seeds.wheat}
+              </div>
+              <div>
+                <strong>🌾 Harvested:</strong> {playerInventory.harvestedCrops.wheat}
+              </div>
+            </>
+          )}
+        </div>
+        
+        {/* Crop Selection */}
+        <div style={{ marginTop: '12px' }}>
+          <div style={{ marginBottom: '8px', fontSize: isMobile ? '13px' : '14px', fontWeight: 'bold' }}>
+            🌱 Select Seed Type:
+          </div>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => setSelectedCropType('pumpkin')}
+              style={{
+                background: playerInventory.selectedCropType === 'pumpkin' ? 'rgba(255, 140, 0, 0.8)' : 'rgba(100, 100, 100, 0.6)',
+                color: 'white',
+                border: playerInventory.selectedCropType === 'pumpkin' ? '2px solid #FFD700' : '2px solid transparent',
+                padding: isMobile ? '6px 8px' : '8px 12px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: isMobile ? '11px' : '12px',
+                fontWeight: 'bold',
+                pointerEvents: 'auto',
+                opacity: playerInventory.seeds.pumpkin > 0 ? 1 : 0.5,
+              }}
+            >
+              🎃 {playerInventory.seeds.pumpkin}
+            </button>
+            {playerInventory.unlockedCrops.corn && (
+              <button
+                onClick={() => setSelectedCropType('corn')}
+                style={{
+                  background: playerInventory.selectedCropType === 'corn' ? 'rgba(255, 215, 0, 0.8)' : 'rgba(100, 100, 100, 0.6)',
+                  color: 'white',
+                  border: playerInventory.selectedCropType === 'corn' ? '2px solid #FFD700' : '2px solid transparent',
+                  padding: isMobile ? '6px 8px' : '8px 12px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: isMobile ? '11px' : '12px',
+                  fontWeight: 'bold',
+                  pointerEvents: 'auto',
+                  opacity: playerInventory.seeds.corn > 0 ? 1 : 0.5,
+                }}
+              >
+                🌽 {playerInventory.seeds.corn}
+              </button>
+            )}
+            {playerInventory.unlockedCrops.wheat && (
+              <button
+                onClick={() => setSelectedCropType('wheat')}
+                style={{
+                  background: playerInventory.selectedCropType === 'wheat' ? 'rgba(244, 164, 96, 0.8)' : 'rgba(100, 100, 100, 0.6)',
+                  color: 'white',
+                  border: playerInventory.selectedCropType === 'wheat' ? '2px solid #FFD700' : '2px solid transparent',
+                  padding: isMobile ? '6px 8px' : '8px 12px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: isMobile ? '11px' : '12px',
+                  fontWeight: 'bold',
+                  pointerEvents: 'auto',
+                  opacity: playerInventory.seeds.wheat > 0 ? 1 : 0.5,
+                }}
+              >
+                🌾 {playerInventory.seeds.wheat}
+              </button>
+            )}
+          </div>
+          <div style={{ 
+            marginTop: '6px', 
+            fontSize: isMobile ? '10px' : '11px', 
+            color: '#ccc',
+            fontStyle: 'italic'
+          }}>
+            Selected: {playerInventory.selectedCropType === 'pumpkin' ? '🎃 Pumpkin' : 
+                      playerInventory.selectedCropType === 'corn' ? '🌽 Corn' : 
+                      '🌾 Wheat'} seeds will be planted
+          </div>
         </div>
         
         {!isMobile && (
@@ -72,6 +156,16 @@ export default function GameUI() {
                 <div><span style={{ color: '#90EE90' }}>●</span> Sprouts: {cropCounts.corn.sprout}</div>
                 <div><span style={{ color: '#32CD32' }}>●</span> Growing: {cropCounts.corn.growing}</div>
                 <div><span style={{ color: '#FFD700' }}>●</span> Mature: {cropCounts.corn.mature}</div>
+              </>
+            )}
+            
+            {playerInventory.unlockedCrops.wheat && (
+              <>
+                <div style={{ marginTop: '8px', marginBottom: '6px', fontWeight: 'bold', color: '#F4A460' }}>🌾 Wheat:</div>
+                <div><span style={{ color: '#8B4513' }}>●</span> Seeds: {cropCounts.wheat.seed}</div>
+                <div><span style={{ color: '#9ACD32' }}>●</span> Sprouts: {cropCounts.wheat.sprout}</div>
+                <div><span style={{ color: '#DAA520' }}>●</span> Growing: {cropCounts.wheat.growing}</div>
+                <div><span style={{ color: '#F4A460' }}>●</span> Mature: {cropCounts.wheat.mature}</div>
               </>
             )}
           </div>
