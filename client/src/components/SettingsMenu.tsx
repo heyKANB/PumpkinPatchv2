@@ -127,7 +127,10 @@ export default function SettingsMenu({ isOpen, onClose }: SettingsMenuProps) {
             Appearance
           </button>
           <button
-            onClick={() => setActiveTab('shop')}
+            onClick={() => {
+              console.log('[Settings] Shop tab clicked');
+              setActiveTab('shop');
+            }}
             className={`flex-1 py-3 px-4 font-medium transition-colors ${
               activeTab === 'shop'
                 ? 'bg-green-100 text-green-700 border-b-2 border-green-500'
