@@ -81,7 +81,7 @@ export default function AvatarRenderer({ position = [0, 0, 0] }: AvatarRendererP
 
 // Separate component for rendering avatar previews (used in UI)
 interface AvatarPreviewProps {
-  avatar: typeof usePlayerAppearance.getState.avatar;
+  avatar: ReturnType<typeof usePlayerAppearance.getState>['avatar'];
   scale?: number;
   position?: [number, number, number];
   rotation?: [number, number, number];
@@ -123,13 +123,13 @@ export function AvatarPreview({
       {/* Base character */}
       <mesh position={[0, 0.5, 0]}>
         <capsuleGeometry args={[0.3, 1]} />
-        <meshLambertMaterial color={colors.skin} />
+        <meshLambertMaterial color={colors.skin as any} />
       </mesh>
 
       {/* Character indicator ring */}
       <mesh position={[0, -0.3, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.8, 1]} />
-        <meshBasicMaterial color={colors.accent} transparent opacity={0.3} />
+        <meshBasicMaterial color={colors.accent as any} transparent opacity={0.3} />
       </mesh>
 
       {/* Render equipped items */}

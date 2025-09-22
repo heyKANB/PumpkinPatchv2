@@ -5,6 +5,7 @@ import { useFarm } from "../lib/stores/useFarm";
 import { useAudio } from "../lib/stores/useAudio";
 import { usePlayerAppearance } from "../lib/stores/usePlayerAppearance";
 import { FARM_SIZE } from "../lib/constants";
+import AvatarRenderer from "./AvatarRenderer";
 import * as THREE from "three";
 
 interface PlayerControllerProps {
@@ -14,11 +15,10 @@ interface PlayerControllerProps {
 }
 
 export default function PlayerController({ mobileMovement, mobileInteract, onPositionChange }: PlayerControllerProps) {
-  const playerRef = useRef<THREE.Mesh>(null);
+  const playerRef = useRef<THREE.Group>(null);
   const [, getKeys] = useKeyboardControls();
   const { plantCrop, playerInventory } = useFarm();
   const { playHit } = useAudio();
-  const { appearance } = usePlayerAppearance();
   const [lastInteractTime, setLastInteractTime] = useState(0);
 
   const handlePlanting = () => {
@@ -100,15 +100,8 @@ export default function PlayerController({ mobileMovement, mobileInteract, onPos
   });
 
   return (
-    <mesh ref={playerRef} position={[0, 0.5, 0]} castShadow>
-      <capsuleGeometry args={[0.3, 1]} />
-      <meshLambertMaterial color={appearance.bodyColor} />
-      
-      {/* Player indicator ring */}
-      <mesh position={[0, -0.8, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.8, 1]} />
-        <meshBasicMaterial color={appearance.ringColor} transparent opacity={0.3} />
-      </mesh>
-    </mesh>
+    <group ref={playerRef} position={[0, 0, 0]}>
+      <AvatarRenderer position={[0, 0, 0]} />
+    </group>
   );
 }
