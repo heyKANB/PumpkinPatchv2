@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { useFarm } from "../lib/stores/useFarm";
 import { useAudio } from "../lib/stores/useAudio";
 import { useEquipment } from "../lib/stores/useEquipment";
 import { useIsMobile } from "../hooks/use-is-mobile";
 import { useIsTablet } from "../hooks/use-is-tablet";
+import SettingsMenu from './SettingsMenu';
 
 export default function GameUI() {
   const { playerInventory, getTotalCropsByStage, setSelectedCropType } = useFarm();
@@ -10,6 +12,7 @@ export default function GameUI() {
   const { equipment } = useEquipment();
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
+  const [showSettings, setShowSettings] = useState(false);
 
   const cropCounts = getTotalCropsByStage();
   const criticalEquipment = equipment.filter(item => item.durability < 30).length;
@@ -212,26 +215,53 @@ export default function GameUI() {
         </div>
       )}
 
-      {/* Audio Control */}
-      <button
-        onClick={toggleMute}
-        style={{
-          position: 'absolute',
-          top: '0',
-          right: '0',
-          background: 'rgba(0, 0, 0, 0.8)',
-          color: 'white',
-          border: 'none',
-          padding: isMobile ? '8px' : '10px',
-          borderRadius: '10px',
-          cursor: 'pointer',
-          pointerEvents: 'auto',
-          fontFamily: 'Inter, sans-serif',
-          fontSize: isMobile ? '12px' : '14px',
-        }}
-      >
-        {isMuted ? '🔇' : '🔊'}
-      </button>
+      {/* Settings & Audio Controls */}
+      <div style={{
+        position: 'absolute',
+        top: '0',
+        right: '0',
+        display: 'flex',
+        gap: '8px'
+      }}>
+        <button
+          onClick={() => setShowSettings(true)}
+          style={{
+            background: 'rgba(0, 0, 0, 0.8)',
+            color: 'white',
+            border: 'none',
+            padding: isMobile ? '8px' : '10px',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            pointerEvents: 'auto',
+            fontFamily: 'Inter, sans-serif',
+            fontSize: isMobile ? '12px' : '14px',
+          }}
+        >
+          ⚙️
+        </button>
+        <button
+          onClick={toggleMute}
+          style={{
+            background: 'rgba(0, 0, 0, 0.8)',
+            color: 'white',
+            border: 'none',
+            padding: isMobile ? '8px' : '10px',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            pointerEvents: 'auto',
+            fontFamily: 'Inter, sans-serif',
+            fontSize: isMobile ? '12px' : '14px',
+          }}
+        >
+          {isMuted ? '🔇' : '🔊'}
+        </button>
+      </div>
+
+      {/* Settings Menu */}
+      <SettingsMenu 
+        isOpen={showSettings} 
+        onClose={() => setShowSettings(false)} 
+      />
 
       {/* Instructions - Desktop only or simplified mobile */}
       {!isMobile && (

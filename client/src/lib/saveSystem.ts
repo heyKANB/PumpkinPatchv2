@@ -232,6 +232,24 @@ export class SaveSystem {
     }
   }
 
+  static resetAllGameData(): void {
+    try {
+      // Clear save data
+      SaveSystem.clearSave();
+      
+      // Reset all stores to initial state
+      useFarm.getState().initializeFarm();
+      useCoins.getState().setCoins(0);
+      useEquipment.getState().initializeEquipment();
+      useGame.getState().setPhase('ready');
+      useXP.getState().setXP(0);
+      
+      console.log('All game data reset to initial state');
+    } catch (error) {
+      console.error('Failed to reset game data:', error);
+    }
+  }
+
   static hasSave(): boolean {
     try {
       return localStorage.getItem(SAVE_KEY) !== null;

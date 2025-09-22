@@ -3,6 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { useKeyboardControls } from "@react-three/drei";
 import { useFarm } from "../lib/stores/useFarm";
 import { useAudio } from "../lib/stores/useAudio";
+import { usePlayerAppearance } from "../lib/stores/usePlayerAppearance";
 import { FARM_SIZE } from "../lib/constants";
 import * as THREE from "three";
 
@@ -17,6 +18,7 @@ export default function PlayerController({ mobileMovement, mobileInteract, onPos
   const [, getKeys] = useKeyboardControls();
   const { plantCrop, playerInventory } = useFarm();
   const { playHit } = useAudio();
+  const { appearance } = usePlayerAppearance();
   const [lastInteractTime, setLastInteractTime] = useState(0);
 
   const handlePlanting = () => {
@@ -100,12 +102,12 @@ export default function PlayerController({ mobileMovement, mobileInteract, onPos
   return (
     <mesh ref={playerRef} position={[0, 0.5, 0]} castShadow>
       <capsuleGeometry args={[0.3, 1]} />
-      <meshLambertMaterial color="#4A90E2" />
+      <meshLambertMaterial color={appearance.bodyColor} />
       
       {/* Player indicator ring */}
       <mesh position={[0, -0.8, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.8, 1]} />
-        <meshBasicMaterial color="#4A90E2" transparent opacity={0.3} />
+        <meshBasicMaterial color={appearance.ringColor} transparent opacity={0.3} />
       </mesh>
     </mesh>
   );
