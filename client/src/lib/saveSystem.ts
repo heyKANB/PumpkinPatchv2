@@ -3,6 +3,8 @@ import { useCoins } from './stores/useCoins';
 import { useEquipment } from './stores/useEquipment';
 import { useGame } from './stores/useGame';
 import { useXP } from './stores/useXP';
+import { usePlayerAppearance } from './stores/usePlayerAppearance';
+import { PlayerAvatar } from './avatar/types';
 
 interface SaveData {
   version: string;
@@ -30,10 +32,15 @@ interface SaveData {
     level: number;
     totalXPEarned: number;
   };
+  avatar?: {
+    avatar: PlayerAvatar;
+    name: string;
+    version: string;
+  };
 }
 
 const SAVE_KEY = 'pumpkin-farm-save';
-const SAVE_VERSION = '1.0.0';
+const SAVE_VERSION = '2.0.0';
 
 export class SaveSystem {
   static save(): void {
@@ -43,6 +50,7 @@ export class SaveSystem {
       const equipmentState = useEquipment.getState();
       const gameState = useGame.getState();
       const xpState = useXP.getState();
+      const avatarState = usePlayerAppearance.getState();
 
       const saveData: SaveData = {
         version: SAVE_VERSION,
@@ -69,6 +77,11 @@ export class SaveSystem {
           currentXP: xpState.currentXP,
           level: xpState.level,
           totalXPEarned: xpState.totalXPEarned,
+        },
+        avatar: {
+          avatar: avatarState.avatar,
+          name: avatarState.name,
+          version: '2.0'
         }
       };
 
@@ -91,7 +104,7 @@ export class SaveSystem {
       
       // Version compatibility check
       if (saveData.version !== SAVE_VERSION) {
-        console.warn('Save data version mismatch - may need migration');
+        console.warn(`Save data version mismatch - found ${saveData.version}, expected ${SAVE_VERSION} - migration will be handled`);
       }
 
       console.log('Save data loaded successfully', {
@@ -193,6 +206,17 @@ export class SaveSystem {
         xpStore.setXP(saveData.xp.totalXPEarned);
       }
 
+      // Restore avatar state
+      if (saveData.avatar) {
+        const avatarStore = usePlayerAppearance.getState();
+        // Set the avatar data directly (store handles its own persistence)
+        avatarStore.avatar = saveData.avatar.avatar;
+        avatarStore.name = saveData.avatar.name;
+        console.log('[SaveSystem] Avatar state restored from save data');
+      } else {
+        console.log('[SaveSystem] No avatar data in save - using current avatar store state');
+      }
+
       console.log('Game state restored successfully');
     } catch (error) {
       console.error('Failed to restore game state:', error);
@@ -243,6 +267,7 @@ export class SaveSystem {
       useEquipment.getState().initializeEquipment();
       useGame.getState().setPhase('ready');
       useXP.getState().setXP(0);
+      usePlayerAppearance.getState().resetToDefault();
       
       console.log('All game data reset to initial state');
     } catch (error) {
