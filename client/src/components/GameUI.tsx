@@ -257,11 +257,15 @@ export default function GameUI() {
         </button>
       </div>
 
-      {/* Settings Menu */}
-      <SettingsMenu 
-        isOpen={showSettings} 
-        onClose={() => setShowSettings(false)} 
-      />
+      {/* Settings Menu - Moved outside pointer events container */}
+      {showSettings && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999, pointerEvents: 'auto' }}>
+          <SettingsMenu 
+            isOpen={showSettings} 
+            onClose={() => setShowSettings(false)} 
+          />
+        </div>
+      )}
 
       {/* Instructions - Desktop only or simplified mobile */}
       {!isMobile && (
