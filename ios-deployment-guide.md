@@ -25,7 +25,7 @@ Using Capacitor to create a native iOS app for App Store distribution.
 ### Current Configuration:
 - **Bundle ID**: com.huntergames.pumpkinpatch  
 - **App Name**: Pumpkin Farm 3D
-- **Version**: 3.0.0, Build: 21
+- **Version**: 3.10.0, Build: 36
 - **App Store Connect Integration**: "Apple Connect App Mgr"
 - **App Tracking Transparency**: Implemented with NSUserTrackingUsageDescription
 - **Privacy Compliance**: Full iOS 14.5+ ATT framework integration
@@ -68,8 +68,8 @@ Using the provided `codemagic.yaml`:
 - **App ID**: 6749664824
 - **Bundle ID**: com.huntergames.pumpkinpatch
 - **Name**: Pumpkin Farm 3D
-- **Version**: 3.0.0
-- **Build Number**: 21
+- **Version**: 3.10.0
+- **Build Number**: 36
 
 ## Recommended Next Steps:
 
