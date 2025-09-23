@@ -11,7 +11,7 @@ interface TouchHandlerProps {
 
 export default function TouchHandler({ onTouchMove }: TouchHandlerProps) {
   const { camera, scene, gl } = useThree();
-  const { farmGrid, harvestPumpkin } = useFarm();
+  const { farmGrid, harvestCrop } = useFarm();
   const { playSuccess } = useAudio();
   const isMobile = useIsMobile();
   const raycaster = useRef(new THREE.Raycaster());
@@ -105,13 +105,14 @@ export default function TouchHandler({ onTouchMove }: TouchHandlerProps) {
     for (const intersect of intersects) {
       const object = intersect.object;
       
-      // Check if this is a pumpkin mesh (look for specific userData or naming)
-      if (object.userData?.isPumpkin && object.userData?.stage === 'mature') {
+      // Check if this is a crop mesh (look for specific userData or naming)
+      if (object.userData?.isCrop && object.userData?.stage === 'mature') {
         const row = object.userData.row;
         const col = object.userData.col;
         
-        // Harvesting pumpkin
-        const success = harvestPumpkin(row, col);
+        console.log(`[TouchHandler] Attempting to harvest ${object.userData.cropType} at (${row}, ${col})`);
+        // Harvesting crop
+        const success = harvestCrop(row, col);
         if (success) {
           playSuccess();
         }
