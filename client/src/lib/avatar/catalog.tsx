@@ -183,6 +183,189 @@ const ItemRenderers = {
         <meshLambertMaterial color="#9CA3AF" />
       </mesh>
     </group>
+  ),
+
+  // Additional Hair Styles
+  buzzCut: ({ colors }: { colors: AvatarColors }) => (
+    <mesh position={[0, 0.85, 0]}>
+      <sphereGeometry args={[0.35, 8, 6]} />
+      <meshLambertMaterial color={colors.hair} />
+    </mesh>
+  ),
+
+  ponytail: ({ colors }: { colors: AvatarColors }) => (
+    <group position={[0, 0.9, 0]}>
+      <mesh>
+        <sphereGeometry args={[0.4, 8, 6]} />
+        <meshLambertMaterial color={colors.hair} />
+      </mesh>
+      {/* Ponytail */}
+      <mesh position={[0, -0.1, -0.4]}>
+        <cylinderGeometry args={[0.15, 0.08, 0.6, 8]} />
+        <meshLambertMaterial color={colors.hair} />
+      </mesh>
+    </group>
+  ),
+
+  mohawk: ({ colors }: { colors: AvatarColors }) => (
+    <group position={[0, 0.9, 0]}>
+      <mesh>
+        <sphereGeometry args={[0.35, 8, 6]} />
+        <meshLambertMaterial color={colors.hair} />
+      </mesh>
+      {/* Mohawk spike */}
+      <mesh position={[0, 0.3, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <coneGeometry args={[0.15, 0.8, 8]} />
+        <meshLambertMaterial color={colors.hair} />
+      </mesh>
+    </group>
+  ),
+
+  // Additional Hats
+  beret: ({ colors }: { colors: AvatarColors }) => (
+    <group position={[0, 1.0, 0]}>
+      <mesh>
+        <sphereGeometry args={[0.45, 8, 6, 0, Math.PI * 2, 0, Math.PI * 0.6]} />
+        <meshLambertMaterial color={colors.primary} />
+      </mesh>
+      <mesh position={[0.2, 0.1, 0]}>
+        <sphereGeometry args={[0.05]} />
+        <meshLambertMaterial color={colors.accent} />
+      </mesh>
+    </group>
+  ),
+
+  topHat: ({ colors }: { colors: AvatarColors }) => (
+    <group position={[0, 1.2, 0]}>
+      {/* Hat crown */}
+      <mesh>
+        <cylinderGeometry args={[0.3, 0.3, 0.8, 8]} />
+        <meshLambertMaterial color={colors.primary} />
+      </mesh>
+      {/* Hat brim */}
+      <mesh position={[0, -0.4, 0]}>
+        <cylinderGeometry args={[0.5, 0.5, 0.05, 12]} />
+        <meshLambertMaterial color={colors.primary} />
+      </mesh>
+    </group>
+  ),
+
+  helmet: ({ colors }: { colors: AvatarColors }) => (
+    <group position={[0, 0.95, 0]}>
+      <mesh>
+        <sphereGeometry args={[0.5, 8, 6]} />
+        <meshLambertMaterial color={colors.primary} />
+      </mesh>
+      {/* Visor */}
+      <mesh position={[0, 0, 0.4]}>
+        <boxGeometry args={[0.6, 0.15, 0.05]} />
+        <meshLambertMaterial color={colors.accent} />
+      </mesh>
+    </group>
+  ),
+
+  // Additional Bandanas
+  neckBandana: ({ colors }: { colors: AvatarColors }) => (
+    <mesh position={[0, 0.2, 0.2]}>
+      <boxGeometry args={[0.4, 0.15, 0.05]} />
+      <meshLambertMaterial color={colors.primary} />
+    </mesh>
+  ),
+
+  faceMask: ({ colors }: { colors: AvatarColors }) => (
+    <mesh position={[0, 0.5, 0.35]}>
+      <boxGeometry args={[0.3, 0.2, 0.05]} />
+      <meshLambertMaterial color={colors.primary} />
+    </mesh>
+  ),
+
+  // Additional Torso Items
+  tuxedo: ({ colors }: { colors: AvatarColors }) => (
+    <group position={[0, 0, 0]}>
+      <mesh>
+        <boxGeometry args={[0.8, 1.2, 0.6]} />
+        <meshLambertMaterial color={colors.primary} />
+      </mesh>
+      {/* Bow tie */}
+      <mesh position={[0, 0.4, 0.3]}>
+        <boxGeometry args={[0.15, 0.08, 0.05]} />
+        <meshLambertMaterial color={colors.accent} />
+      </mesh>
+    </group>
+  ),
+
+  apron: ({ colors }: { colors: AvatarColors }) => (
+    <mesh position={[0, -0.1, 0.32]}>
+      <boxGeometry args={[0.7, 1.0, 0.05]} />
+      <meshLambertMaterial color={colors.primary} />
+    </mesh>
+  ),
+
+  flannel: ({ colors }: { colors: AvatarColors }) => (
+    <group position={[0, 0, 0]}>
+      <mesh>
+        <boxGeometry args={[0.9, 1.3, 0.65]} />
+        <meshLambertMaterial color={colors.primary} />
+      </mesh>
+      {/* Collar */}
+      <mesh position={[0, 0.5, 0.32]}>
+        <boxGeometry args={[0.4, 0.2, 0.05]} />
+        <meshLambertMaterial color={colors.accent} />
+      </mesh>
+    </group>
+  ),
+
+  // Additional Face Accessories
+  monocle: ({ colors }: { colors: AvatarColors }) => (
+    <group position={[0.1, 0.65, 0.3]}>
+      <mesh>
+        <cylinderGeometry args={[0.08, 0.08, 0.02, 8]} />
+        <meshLambertMaterial color="#E5E7EB" transparent opacity={0.3} />
+      </mesh>
+      {/* Frame */}
+      <mesh>
+        <torusGeometry args={[0.08, 0.01, 6, 12]} />
+        <meshLambertMaterial color="#374151" />
+      </mesh>
+    </group>
+  ),
+
+  eyePatch: ({ colors }: { colors: AvatarColors }) => (
+    <mesh position={[-0.12, 0.65, 0.3]}>
+      <cylinderGeometry args={[0.1, 0.1, 0.02, 8]} />
+      <meshLambertMaterial color={colors.primary} />
+    </mesh>
+  ),
+
+  // Additional Handheld Items
+  shovel: ({ colors }: { colors: AvatarColors }) => (
+    <group position={[0.6, 0, 0]} rotation={[0, 0, -0.3]}>
+      {/* Handle */}
+      <mesh>
+        <cylinderGeometry args={[0.03, 0.03, 1.2, 6]} />
+        <meshLambertMaterial color="#8B4513" />
+      </mesh>
+      {/* Shovel blade */}
+      <mesh position={[0, 0.6, 0]}>
+        <boxGeometry args={[0.2, 0.3, 0.05]} />
+        <meshLambertMaterial color="#9CA3AF" />
+      </mesh>
+    </group>
+  ),
+
+  wateringCan: ({ colors }: { colors: AvatarColors }) => (
+    <group position={[0.5, -0.2, 0]}>
+      {/* Can body */}
+      <mesh>
+        <cylinderGeometry args={[0.15, 0.18, 0.3, 8]} />
+        <meshLambertMaterial color={colors.primary} />
+      </mesh>
+      {/* Spout */}
+      <mesh position={[0.2, 0.1, 0]} rotation={[0, 0, -0.3]}>
+        <cylinderGeometry args={[0.02, 0.03, 0.25, 6]} />
+        <meshLambertMaterial color={colors.primary} />
+      </mesh>
+    </group>
   )
 };
 
@@ -334,6 +517,184 @@ export const AVATAR_CATALOG: AvatarItem[] = [
     description: 'Essential farming tool',
     tintable: false,
     render: ItemRenderers.farmingHoe,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 }
+  },
+  {
+    id: 'handheld_shovel',
+    name: 'Garden Shovel',
+    slot: 'handheld',
+    priceCoins: 120,
+    rarity: 'common',
+    description: 'Perfect for digging and planting',
+    tintable: false,
+    render: ItemRenderers.shovel,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 }
+  },
+  {
+    id: 'handheld_watering_can',
+    name: 'Watering Can',
+    slot: 'handheld',
+    priceCoins: 90,
+    rarity: 'common',
+    description: 'Keep your crops hydrated',
+    tintable: true,
+    render: ItemRenderers.wateringCan,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 }
+  },
+
+  // === ADDITIONAL HAIR STYLES ===
+  {
+    id: 'hair_buzz_cut',
+    name: 'Buzz Cut',
+    slot: 'hair',
+    priceCoins: 50,
+    rarity: 'common',
+    description: 'Short and practical',
+    tintable: true,
+    render: ItemRenderers.buzzCut,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 }
+  },
+  {
+    id: 'hair_ponytail',
+    name: 'Ponytail',
+    slot: 'hair',
+    priceCoins: 85,
+    rarity: 'common',
+    description: 'Tied back and ready for work',
+    tintable: true,
+    render: ItemRenderers.ponytail,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 }
+  },
+  {
+    id: 'hair_mohawk',
+    name: 'Mohawk',
+    slot: 'hair',
+    priceCoins: 180,
+    rarity: 'rare',
+    description: 'Bold and rebellious style',
+    tintable: true,
+    render: ItemRenderers.mohawk,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 }
+  },
+
+  // === ADDITIONAL HATS ===
+  {
+    id: 'hat_beret',
+    name: 'Beret',
+    slot: 'hat',
+    priceCoins: 110,
+    rarity: 'common',
+    description: 'Sophisticated French style',
+    tintable: true,
+    render: ItemRenderers.beret,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 },
+    hides: ['hair']
+  },
+  {
+    id: 'hat_top_hat',
+    name: 'Top Hat',
+    slot: 'hat',
+    priceCoins: 250,
+    rarity: 'epic',
+    description: 'Elegant formal headwear',
+    tintable: true,
+    render: ItemRenderers.topHat,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 },
+    hides: ['hair']
+  },
+  {
+    id: 'hat_helmet',
+    name: 'Safety Helmet',
+    slot: 'hat',
+    priceCoins: 160,
+    rarity: 'rare',
+    description: 'Protection for hard work',
+    tintable: true,
+    render: ItemRenderers.helmet,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 },
+    hides: ['hair']
+  },
+
+  // === ADDITIONAL BANDANAS ===
+  {
+    id: 'bandana_neck',
+    name: 'Neck Bandana',
+    slot: 'bandana',
+    priceCoins: 45,
+    rarity: 'common',
+    description: 'Classic cowboy accessory',
+    tintable: true,
+    render: ItemRenderers.neckBandana,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 }
+  },
+  {
+    id: 'bandana_face_mask',
+    name: 'Face Mask',
+    slot: 'bandana',
+    priceCoins: 75,
+    rarity: 'common',
+    description: 'Stay protected while farming',
+    tintable: true,
+    render: ItemRenderers.faceMask,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 }
+  },
+
+  // === ADDITIONAL TORSO CLOTHING ===
+  {
+    id: 'torso_tuxedo',
+    name: 'Formal Tuxedo',
+    slot: 'torso',
+    priceCoins: 400,
+    rarity: 'epic',
+    description: 'Dressed to impress',
+    tintable: true,
+    render: ItemRenderers.tuxedo,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 }
+  },
+  {
+    id: 'torso_apron',
+    name: 'Farm Apron',
+    slot: 'torso',
+    priceCoins: 80,
+    rarity: 'common',
+    description: 'Keep your clothes clean',
+    tintable: true,
+    render: ItemRenderers.apron,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 }
+  },
+  {
+    id: 'torso_flannel',
+    name: 'Flannel Shirt',
+    slot: 'torso',
+    priceCoins: 140,
+    rarity: 'common',
+    description: 'Cozy and comfortable',
+    tintable: true,
+    render: ItemRenderers.flannel,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 }
+  },
+
+  // === ADDITIONAL FACE ACCESSORIES ===
+  {
+    id: 'face_monocle',
+    name: 'Monocle',
+    slot: 'faceAccessory',
+    priceCoins: 200,
+    rarity: 'rare',
+    description: 'Distinguished eyewear',
+    tintable: false,
+    render: ItemRenderers.monocle,
+    attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 }
+  },
+  {
+    id: 'face_eye_patch',
+    name: 'Eye Patch',
+    slot: 'faceAccessory',
+    priceCoins: 150,
+    rarity: 'rare',
+    description: 'Arrr, matey!',
+    tintable: true,
+    render: ItemRenderers.eyePatch,
     attach: { position: [0, 0, 0], rotation: [0, 0, 0], scale: 1 }
   }
 ];
