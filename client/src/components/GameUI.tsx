@@ -267,47 +267,6 @@ export default function GameUI() {
         </div>
       )}
 
-      {/* Instructions - Desktop only or simplified mobile */}
-      {!isMobile && (
-        <div style={{
-          position: 'absolute',
-          bottom: '20px',
-          left: '0',
-          background: 'rgba(0, 0, 0, 0.8)',
-          color: 'white',
-          padding: '10px 15px',
-          borderRadius: '10px',
-          fontFamily: 'Inter, sans-serif',
-          fontSize: '12px',
-          maxWidth: '400px',
-        }}>
-          <div style={{ color: '#90EE90' }}>
-            💡 Tip: Move around the farm and press Space/E to plant seeds. 
-            Pumpkins will grow automatically. Click mature orange pumpkins to harvest them!
-          </div>
-        </div>
-      )}
-
-      {/* Mobile Instructions */}
-      {isMobile && (
-        <div style={{
-          position: 'absolute',
-          bottom: '120px', // Above mobile controls
-          left: '0',
-          right: '0',
-          background: 'rgba(0, 0, 0, 0.8)',
-          color: 'white',
-          padding: '8px 12px',
-          borderRadius: '10px',
-          fontFamily: 'Inter, sans-serif',
-          fontSize: '11px',
-          textAlign: 'center',
-        }}>
-          <div style={{ color: '#90EE90' }}>
-            Drag anywhere to move farmer, green button to plant, tap orange pumpkins to harvest
-          </div>
-        </div>
-      )}
     </div>
   );
 }
